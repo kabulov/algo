@@ -26,5 +26,8 @@ class uncopyable {
 class someclass : private uncopyable {};
 
  so you just derive any class from uncopyable
- but it is important to derive with privately because this is an implementation detail
+ but it is important to derive 'private' because this is an implementation detail
+ it is also important to make destructor not virtual to enable base class optimization
+ but this may lead to multiple inheritance which turns off base class optimizatoin
+ one can also use boost version of the funciton described above. it is called 'noncopyable' there
  (is-a, has-a, is-implemented-in-terms-of-a)
