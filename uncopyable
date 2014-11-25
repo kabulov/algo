@@ -1,0 +1,26 @@
+
+if you want to prevent copying e.g. make copy constuctor and assignment operator invalid
+
+1. you can declare copy constructor and assignment operator private and not DEFINE them
+ 
+ class cls {
+  public:
+  //...
+  private:
+  cls(const cls&);
+  cls& operator=(const cls&);
+ };
+ 
+ this way even friend or member functions cannot call them, but at link-time
+ so if you want to make this happen at comple-time then next trick is useful
+ 
+class uncopyable {
+ protected:
+  uncopyable(){}
+  ~uncopyable(){}
+ private:
+  uncopyable(const uncopyable&);
+  uncopyable& operator=(const uncopyable&);
+};
+
+ so you just derive any class from uncopyable
