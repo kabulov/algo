@@ -23,4 +23,8 @@ class uncopyable {
   uncopyable& operator=(const uncopyable&);
 };
 
+class someclass : private uncopyable {};
+
  so you just derive any class from uncopyable
+ but it is important to derive with privately because this is an implementation detail
+ (is-a, has-a, is-implemented-in-terms-of-a)
