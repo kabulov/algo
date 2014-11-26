@@ -1,0 +1,69 @@
+
+it is important to handle assignment to self in operator=
+
+Situations:
+
+1. 
+ class Widget {};
+ Widget w;
+ w=w;
+
+2. 
+ a[i] = a[j] //when i == j
+ 
+3.
+ *px = *py //aliasing
+
+4. 
+ class Base{};
+ class Derived:public Base{};
+ void f(const Base& lhs, Derived *rhs); //when we compare these params
+
+now lets try some code
+ 
+class inside {};
+class outside {
+  //...
+private:
+  inside ins;
+};
+ 
+unsafe operator=:
+
+outside& outside::operator=(const outside& param) {
+  delete this->ins;
+  this->ins = new inside(param->ins);
+  return *this;
+}
+
+this code does not consider assignment to self (and is also exception unsafe)
+
+to handle self assignment we consider next piece of code as a first line of operator=
+  
+  if (this == &param) retyrb *this;
+
+but so we have to handle exception safety too
+and
+it is better to handle expception safety because often it eliminates assignment to self problem too
+
+  outside& outside::operator=(const outside& param) {
+    inside *ptr = this->ins;
+    this->ins = new inside(param->ins);
+    delete ptr;
+    
+    return *this;
+  }
+  
+but if we have our swap function AND it is designed properly (exception safe, optimal, etc.) then
+
+class outside {
+  //...
+  void swap(outside& param);
+  //...
+};
+
+outsude& outside::operator=(const outside& param) {
+  outside temp(param);
+  swap(temp);
+  return *this;
+}
