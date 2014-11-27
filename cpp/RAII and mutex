@@ -1,0 +1,25 @@
+
+here we explore RAII (std::tr1::shared_ptr) and mutex objects
+we use the fact that shared_ptr`s destructor is automatically called when leaving the scope
+but we can substitute shared_ptr`s destructor with some other deleter function
+
+void lock(Mutex *mutex);
+void unlock(Mutex *mutex);
+
+class Lock {
+  public:
+    explicit Lock(Mutex *mutex) : mptr(mutex, unlock) {
+      lock(mptr.get());
+    }
+  private:
+    str::tr1::shared_ptr<Mutex> mptr;
+};  
+
+//...
+Mutex m;
+//...
+{
+  //...
+  Lock lock(&m);
+  //...
+}
