@@ -23,3 +23,31 @@ Mutex m;
   Lock lock(&m);
   //...
 }
+
+basic idea looked like this
+
+class Lock {
+  public:
+    explicit Lock(Mutex *mutex) : mptr(mutex) {
+      lock(mptr);
+    }
+    ~Lock() {
+      unlock(mptr);
+    }
+  private:
+    Mutex *mptr;
+};
+
+so the usage is 
+
+//...
+Mutex m;
+Lock lock1(&m);
+
+but problem arises when we try to copy it (no matter why)
+
+//...
+Lock lock2(lock1);
+
+what should happen here ?
+one of solutions is to make use of shared_ptr which is demonstrated above
