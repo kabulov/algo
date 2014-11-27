@@ -40,11 +40,11 @@ this code does not consider assignment to self (and is also exception unsafe)
 
 to handle self assignment we consider next piece of code as a first line of operator=
   
-  if (this == &param) retyrb *this;
+  if (this == &param) return *this;
 
 but so we have to handle exception safety too
 and
-it is better to handle expception safety because often it eliminates assignment to self problem too
+it is often better to aim exception safety first because it eliminates assignment to self problem too
 
   outside& outside::operator=(const outside& param) {
     inside *ptr = this->ins;
