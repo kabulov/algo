@@ -73,7 +73,7 @@ The contents of std are determined solely by the C++ standartization committee,
   
 namespace WidgetStuff{
   template<typename T>
-  void swap(Widget<t>& a, Widget<T>& b) {
+  void swap(Widget<T>& a, Widget<T>& b) {
     a.swap(b);
   }
 }  
