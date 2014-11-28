@@ -1,1 +1,83 @@
 
+Typical implementation of std::swap
+
+namespace std {
+  template<typename T>
+  void swap(T& a, T& b) {
+    T temp(a);
+    a=b;
+    b=temp;
+  }
+}
+
+now, consider Widget class that has a pointer to WidgetImpl
+
+class WidgetImpl {
+public:
+  //...
+private:
+  int a, b, c;
+  std::vector<int> v;
+  //...
+};
+
+class Widget {
+public:
+  Widget(const Widget& rhs);
+  Widget& operator=(const Widget& rhs) {
+    //...
+    *pImpl=*(rhs.pImpl);
+    //...
+  }
+private:
+  WidgetImpl *pImpl;
+};
+
+To swap the value of two Widget objects, all we really need to do is swap their pImpl pointers, 
+  but the default swap algorithm has no way to konw that. 
+ 
+class Widget {
+public:
+  void swap(Widget& rhs) {
+    using std::swap;        //make std::swap available in this function
+    swap(pImpl, rhs.pImpl);
+  }
+};
+
+namespace std {
+  template<>
+  void swap<Widget>(Widget& a, Widget& b) {
+    a.swap(b);
+  }
+}
+
+suppose, however, that Widget and WidgetImpl were class templates instead of classes.
+
+template<typename T>
+class WidgetImpl{};
+
+template<typename T>
+class Widget{};
+
+thus, we get next bad idea
+
+namespace std {
+  template<>
+  void swap(Widget<T>& a, Widget<T>& b){
+    a.swap(b);
+  }
+}
+
+The contents of std are determined solely by the C++ standartization committee, 
+  and we are prohibited from augmenting from what weve decided should go there. 
+  
+namespace WidgetStuff{
+  template<typename T>
+  void swap(Widget<t>& a, Widget<T>& b) {
+    a.swap(b);
+  }
+}  
+
+now, if any code anywhere calls swap on two Widget objects,  
+  the name lookup rules in C++(specifically rules known as argument-dependent lookup or Koenig lookup)
+  will find the Widget-specific version in WidgetStuff. which is exactly what we want.
