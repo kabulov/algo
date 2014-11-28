@@ -22,7 +22,7 @@ The implicit parameter corresponding to the object on which the memeber function
 Thats why the first call compiles and  the second one does not. 
 The first case involves a parameter listed in the parameter list, but the second one doesnt.
 
-But we would still like to support mixed-mode arithmetic, however, and the to do it is by now perhaps clear:
+But we would still like to support mixed-mode arithmetic, however, and the way to do it is by now, perhaps, clear:
 make operator* a non-member function, thus allowing compilers to perform implicit type conversions on all arguments:
 
 class Rational {
