@@ -209,6 +209,6 @@ struct toString {
 };
 
 vector<pair<int, int> > v;
+transform(ans.begin(),ans.end(),ostream_iterator<string>(cout, "\n"), toString());
 
 #####
-transform(ans.begin(),ans.end(),ostream_iterator<string>(cout, "\n"), toString());
