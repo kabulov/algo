@@ -1,0 +1,19 @@
+
+Here we will consider stl usage for contest purposes
+
+struct cmp {
+  bool operator() (int lhs, int rhs) {
+    return lhs < rhs;
+  }
+};
+
+vector<int> v;
+
+sort(v.begin(),v.end());
+sort(v.rbegin(),v.rend());
+sort(v.begin(),v.end(),cmp()); //here not cmp but cmp()
+
+cmp manualcmp;
+sort(v.begin(),v.end(),manualcmp);
+
+reverse(v.begin(),v.end());
