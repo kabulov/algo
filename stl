@@ -160,3 +160,14 @@ vector<int> v;
 sort(v.begin(),v.end(),cmp());
 bool b = std::binary_search(v.begin(),v.end(),123,cmp());
 
+#####
+//template <class InputIterator, class T>
+//   InputIterator find (InputIterator first, InputIterator last, const T& val);
+
+#include <algorithm> //std::find
+
+vector<int> v;
+vector<int>::iterator it;
+it = std::find(v.begin(),v.end(),123);
+
+
