@@ -17,3 +17,20 @@ cmp manualcmp;
 sort(v.begin(),v.end(),manualcmp);
 
 reverse(v.begin(),v.end());
+
+struct rnd {
+  void operator() (int& a) {
+    a=rand();
+  }
+};
+
+for_each(v.begin(),v.end(),rnd());
+
+struct rndgen {
+  int operator()(int i) {
+    return rand() % i;
+  }
+};
+
+random_shuffle(v.begin(),v.end(),rndgen());
+
