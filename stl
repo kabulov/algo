@@ -180,3 +180,35 @@ auto dice = std::bind(distribution, generator);
 int sequence = dice()+dice()+dice();
 
 //see also : uniform_real_distribution, random_device
+
+#####
+//lets print vector of pairs
+
+#include <algorithm> std::for_each
+
+struct prn {
+  void operator()(const pair<int, int> & param) {
+    cout << param.first << " " << param.second << "\n";
+  }
+};
+
+vector<pair<int, int> > v;
+for_each(v.begin(),v.end(),prn());
+
+OR
+
+
+#include <algorithm> //std::transform
+
+struct toString {
+	string operator()(const pair<int,int>& param) {
+		ostringstream str;
+		str << param.first << " " << param.second;
+		return str.str();
+	}
+};
+
+vector<pair<int, int> > v;
+
+#####
+transform(ans.begin(),ans.end(),ostream_iterator<string>(cout, "\n"), toString());
