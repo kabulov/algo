@@ -1,6 +1,10 @@
 
 Here we will consider stl usage for contest purposes
 
+#####
+//template <class RandomAccessIterator> void sort (RandomAccessIterator first, RandomAccessIterator last);
+#include <algorithm> //std::sort 
+
 struct cmp {
   bool operator() (int lhs, int rhs) {
     return lhs < rhs;
@@ -9,14 +13,22 @@ struct cmp {
 
 vector<int> v;
 
-sort(v.begin(),v.end());
-sort(v.rbegin(),v.rend());
-sort(v.begin(),v.end(),cmp()); //here not cmp but cmp()
+std::sort(v.begin(),v.end());
+std::sort(v.rbegin(),v.rend());
+std::sort(v.begin(),v.end(),cmp()); //here not cmp but cmp()
 
 cmp manualcmp;
-sort(v.begin(),v.end(),manualcmp);
+std::sort(v.begin(),v.end(),manualcmp);
 
-reverse(v.begin(),v.end());
+#####
+//template <class BidirectionalIterator>void reverse (BidirectionalIterator first, BidirectionalIterator last);
+#include <algorithm> //std::reverse
+
+std::reverse(v.begin(),v.end());
+
+#####
+//template <class InputIterator, class Function> Function for_each (InputIterator first, InputIterator last, Function fn);
+#include <algorithm> //std::for_each
 
 struct rnd {
   void operator() (int& a) {
@@ -24,7 +36,14 @@ struct rnd {
   }
 };
 
-for_each(v.begin(),v.end(),rnd());
+std::for_each(v.begin(),v.end(),rnd());
+
+#####
+//template <class RandomAccessIterator, class RandomNumberGenerator>
+//  void random_shuffle (RandomAccessIterator first, RandomAccessIterator last, RandomNumberGenerator& gen);
+#include <cstdlib> //std::rand()
+#include <algorithm> //std::random_shuffle
+#include <ctime> //std::time
 
 struct rndgen {
   int operator()(int i) {
@@ -32,5 +51,19 @@ struct rndgen {
   }
 };
 
-random_shuffle(v.begin(),v.end(),rndgen());
+std::srand ( unsigned ( std::time(0) ) );
+std::random_shuffle(v.begin(),v.end(),rndgen());
+
+#####
+//ostream* tie (ostream* tiestr);
+//bool sync_with_stdio (bool sync = true);
+
+#include <iostream> //std::cin, std::ios_base::sync_with_stdio
+
+ios_base::sync_with_stdio(false);
+cin.tie(NULL);
+//dont use endl
+//dont mix c style io (scanf,printf) with cpp style (cin, cout)
+
+#####
 
