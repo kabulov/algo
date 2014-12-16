@@ -170,4 +170,13 @@ vector<int> v;
 vector<int>::iterator it;
 it = std::find(v.begin(),v.end(),123);
 
+#####
+#include <random> //std::default_random_engine, std::uniform_int_distribution
 
+std::default_random_engine engine;
+std::uniform_int_distribution<int> distribution(1,100);
+int dice_once = distribution(generator);
+auto dice = std::bind(distribution, generator);
+int sequence = dice()+dice()+dice();
+
+//see also : uniform_real_distribution, random_device
