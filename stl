@@ -3,6 +3,7 @@ Here we will consider stl usage for contest purposes
 
 #####
 //template <class RandomAccessIterator> void sort (RandomAccessIterator first, RandomAccessIterator last);
+
 #include <algorithm> //std::sort 
 
 struct cmp {
@@ -22,12 +23,15 @@ std::sort(v.begin(),v.end(),manualcmp);
 
 #####
 //template <class BidirectionalIterator>void reverse (BidirectionalIterator first, BidirectionalIterator last);
+
 #include <algorithm> //std::reverse
 
+vector<int> v;
 std::reverse(v.begin(),v.end());
 
 #####
 //template <class InputIterator, class Function> Function for_each (InputIterator first, InputIterator last, Function fn);
+
 #include <algorithm> //std::for_each
 
 struct rnd {
@@ -36,11 +40,13 @@ struct rnd {
   }
 };
 
+vector<int> v;
 std::for_each(v.begin(),v.end(),rnd());
 
 #####
 //template <class RandomAccessIterator, class RandomNumberGenerator>
 //  void random_shuffle (RandomAccessIterator first, RandomAccessIterator last, RandomNumberGenerator& gen);
+
 #include <cstdlib> //std::rand()
 #include <algorithm> //std::random_shuffle
 #include <ctime> //std::time
@@ -51,6 +57,7 @@ struct rndgen {
   }
 };
 
+vector<int> v;
 std::srand ( unsigned ( std::time(0) ) );
 std::random_shuffle(v.begin(),v.end(),rndgen());
 
@@ -66,4 +73,90 @@ cin.tie(NULL);
 //dont mix c style io (scanf,printf) with cpp style (cin, cout)
 
 #####
+//template <class ForwardIterator, class Compare>
+//  ForwardIterator max_element (ForwardIterator first, ForwardIterator last, Compare comp);
+//template <class ForwardIterator, class Compare>
+//  ForwardIterator min_element (ForwardIterator first, ForwardIterator last, Compare comp);
+
+#include <algorithm> //std::max_element, std::min_element
+
+struct cmp {
+  bool operator()(int lhs, int rhs) {
+    return lhs < rhs;
+  }
+};
+
+vector<int> v;
+cout << *std::max_element(v.begin(),v.end(),cmp());
+cout << *std::min_element(v.begin(),v.end(),cmp());
+
+#####
+//template <class InputIterator, class T>
+//  typename iterator_traits<InputIterator>::difference_type
+//    count (InputIterator first, InputIterator last, const T& val);
+
+#include <algorithm> std::count
+
+vector<int> v;
+cout << std::count(v.begin(),v.end(),123);
+
+#####
+
+//template <class InputIterator, class OutputIterator>
+//  OutputIterator copy (InputIterator first, InputIterator last, OutputIterator result);
+
+//template <class T, class charT=char, class traits=char_traits<charT>, class Distance = ptrdiff_t> 
+//  class istream_iterator;
+
+//template <class T, class charT=char, class traits=char_traits<charT> >
+//  class ostream_iterator;
+
+#include <algorithm> //std::copy
+#include <iterator> //std::istream_iterator, std::ostream_iterator
+
+vector<int> v;
+
+//read
+//istream_iterator<int>() == end of stream
+vector<int> v((istream_iterator<int>(cin)),istream_iterator<int>());
+//write
+copy(v.begin(),v.end(),ostream_iterator<int>(cout,"\n"));
+
+#####
+//template <class ForwardIterator, class T, class Compare>
+//  ForwardIterator lower_bound (ForwardIterator first, ForwardIterator last, const T& val, Compare comp);
+//template <class ForwardIterator, class T, class Compare>
+//  ForwardIterator upper_bound (ForwardIterator first, ForwardIterator last, const T& val, Compare comp);
+
+#include <algorithm> //std::lower_bound, std::upper_bound
+
+struct cmp {
+  bool operator() (int lhs, int rhs) {
+    return lhs < rhs;
+  }
+};
+
+vector<int> v;
+std::sort(v.begin(),v.end());
+vector<int>::iterator it;
+//lower_bound - first greater or equal element
+it = std::lower_bound(v.begin(),v.end(),cmp());
+//upper_bound - first greater element
+it = std::upper_bound(v.begin(),v.end(),cmp());
+
+#####
+//template <class ForwardIterator, class T, class Compare>
+//  bool binary_search (ForwardIterator first, ForwardIterator last, const T& val, Compare comp);
+
+#include <algorithm> //std::binary_search
+
+struct cmp {
+  bool operator() (int lhs, int rhs) {
+    return lhs < rhs;
+  }
+};
+
+vector<int> v;
+sort(v.begin(),v.end(),cmp());
+bool b = std::binary_search(v.begin(),v.end(),123,cmp());
 
