@@ -270,3 +270,12 @@ v3.resize(v1.size()+v2.size());
 std::merge(v1.begin(),v1.end(),v2.begin(),v2.end(),v3.begin());
 
 #####
+
+#include <queue> //std::priority_queue
+
+priority_queue<int, vector<int>, std::less<int> > big; //top() is the biggest
+priority_queue<int, vector<int>, std::greater<int> > small; //top() is the smallest
+
+top(), pop(), push()
+
+#####
