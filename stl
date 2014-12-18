@@ -114,11 +114,16 @@ cout << std::count(v.begin(),v.end(),123);
 #include <algorithm> //std::copy
 #include <iterator> //std::istream_iterator, std::ostream_iterator
 
+vector<int> v((istream_iterator<int>(cin)),istream_iterator<int>());
+OR
 vector<int> v;
-
+v.resize(n);
+copy((istream_iterator<int>(cin)), istream_iterator<int>(), v.begin());
+OR
+vector<int> v;
+copy((istream_iterator<int>(cin)), istream_iterator<int>(), std::back_inserter(v));
 //read
 //istream_iterator<int>() == end of stream
-vector<int> v((istream_iterator<int>(cin)),istream_iterator<int>());
 //write
 copy(v.begin(),v.end(),ostream_iterator<int>(cout,"\n"));
 
