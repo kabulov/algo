@@ -1,0 +1,15 @@
+
+pid, ppid
+Если родительский процесс завершил свою работу — то  процесс init подставляет себя на его место, присваивая PPID равным 1.
+process ids are 16 bit numbers
+
+ps - list of processes
+'ps -e -f'
+
+process priority
+'nice -n 10 sort input.txt > output.txt'
+by default every process has niceness zero
+only a process with root privelege can run a process with a negative niceness value or 
+ reduce the niceness value of a running process
+to change niceness of a proces sone can also use 'renice' 
+
