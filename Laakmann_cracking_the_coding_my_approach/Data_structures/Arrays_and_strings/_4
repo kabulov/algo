@@ -1,0 +1,93 @@
+
+STATEMENT
+
+write a method to replace all spaces in a string with '%20'. 
+you may assume that the string has sufficient space at the end of the string to hold the additional characters,
+and you are given the true length of the string.
+
+SOLUTION
+
+questions:
+
+what can we use ? std::string ? 
+may there be all spaces ?
+may there be all equal chars except for space ?
+may there be no spaces ?
+should we do that in place ?
+
+solution & analysis & design:
+
+1.
+in place solution is to counthe amount of spaces,
+and run from 'size of a string'+2 * 'amount of spaces' to the very beginning of the string
+and replace put corresponding char in from corresponding distance from the current point
+
+time complexity: O(n)
+space complexity: assuming that we have sufficient space, O(1)
+property: in place
+
+code:
+
+#include <string>
+
+using std::string;
+
+int substituteSpace(string& s, int& len, const char space = ' '){
+  int old_len = len;
+  int amt = 0;
+  for (int i = 0; i < len; ++i) {
+    if(s[i] == space){
+      ++amt;
+    }
+  }
+  len += amt + amt;
+  s[len]='\0';
+  for (int i = len - 1; i >= 0 && amt > 0; --i) {
+    if (s[i - amt - amt] != space){
+      s[i] = s[i - amt - amt];
+    }else{
+      i -= 2;
+      s[i] = '%';
+      s[i+1] = '2';
+      s[i+2] = '0';
+      --amt;
+    }
+  }
+  return old_len;
+}
+
+mistakes & enhancements:
+
+1.
+you better use two pointers to avoid subracting 2*amt all the time
+
+code:
+
+1.
+
+#include <string>
+
+using std::string;
+
+int substituteSpace(string& s, int& len, const char space = ' '){
+  int old_len = len;
+  int amt = 0;
+  for (int i = 0; i < len; ++i ){
+    if (s[i] == space) {
+      ++amt;
+    }
+  }
+  int new_len = len + amt + amt;
+  for (int i = len - 1; i >= 0 && amt; --i) {
+    if (s[i] != space) {
+      s[new_len - 1] = s[i];
+      --new_len;
+    }else{
+      s[new_len - 3] = '%';
+      s[new_len - 2] = '2';
+      s[new_len - 1] = '0';
+      new_len -= 3;
+    }
+  }
+  return old_len;
+}
