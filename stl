@@ -279,3 +279,66 @@ priority_queue<int, vector<int>, std::greater<int> > small; //top() is the small
 top(), pop(), push()
 
 #####
+partial_sort - elements before 'offset' are sorted, others are left without any specific order
+
+//template <class RandomAccessIterator, class Compare>
+//  void partial_sort (RandomAccessIterator first, RandomAccessIterator middle,
+//                     RandomAccessIterator last, Compare comp);
+
+#include <algorithm>    // std::partial_sort
+
+int offset;
+vector<int> v;
+//read v, init offset
+partial_sort(v.begin(), v.begin()+offset,v.end());
+
+#####
+nth_element -  the element at the nth position is the element that would be in that position in a sorted sequence
+
+//template <class RandomAccessIterator, class Compare>
+//  void nth_element (RandomAccessIterator first, RandomAccessIterator nth,
+//                    RandomAccessIterator last, Compare comp);
+
+#include <algorithm>    // std::nth_element
+
+vector<int> v;
+int offset;
+//init v and offset
+nth_element(v.begin(),v.begin()+offset,v.end());
+
+#####
+stable_sort - sorts but but preserves the relative order of elements with equivalent values
+
+//template <class RandomAccessIterator, class Compare>
+//  void stable_sort ( RandomAccessIterator first, RandomAccessIterator last,
+//                     Compare comp );
+
+#include <algorithm>
+
+vector<int> v;
+//init v
+stable_sort(v.begin(),v.end());
+
+#####
+stable_partition - performs partition, but preserves the relative order of equivalent elements
+
+//template <class BidirectionalIterator, class UnaryPredicate>
+//  BidirectionalIterator stable_partition (BidirectionalIterator first,
+//                                          BidirectionalIterator last,
+//                                          UnaryPredicate pred);
+
+#include <algorithm> 
+
+struct predicate {
+ predicate(int p):p_(p){}
+ bool operator()(int pos){
+  return pos < p_;
+ }
+ int p_;
+};
+
+vector<int> v;
+//init v
+stable_partition(v.begin(),v.end(), predicate());
+
+#####
