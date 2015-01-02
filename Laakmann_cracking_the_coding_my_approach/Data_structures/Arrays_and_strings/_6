@@ -34,6 +34,10 @@ space complexity: assuming that we do in place, O(1)
 
 code:
 
+#include <vector>
+
+using std::vector;
+
 1.
 void rotate_right(const vector<vector<int> >& v) {
   int buf;
@@ -49,18 +53,40 @@ void rotate_right(const vector<vector<int> >& v) {
 }
 
 2.
+
+#include <vector>
+
+using std::vector;
+
 typedef vector<vector<int> > vvi;
 
-void shift(const vvi& v, int i, int j, int dir = 1) {
-  if (dir == 1) {
-  
-  }else
-  if (dir == -1) {
-  
-  }else{}
+enum { _right_ = 1, _left_ = -1 };
+
+void shift(const vvi& v, int i, int j, int dir = _right_) {
+ int buf;
+ if (dir == _right_) {
+  buf = v[n-1-i-j][i];
+  v[n-1-i-j][i]=v[n-1-i][n-1-i-j];
+  v[n-1-i][n-1-i-j]=v[i+j][n-1-i];
+  v[i+j][n-1-i]=v[i][j];
+  v[i][j]=tmp; }else
+ if (dir == _left_) {
+  buf = v[i][j];
+  v[i][j]=v[i+j][n-1-i];
+  v[i+j][n-1-i]=v[n-1-i][n-1-i-j];
+  v[n-1-i][n-1-i-j]=v[n-1-i-j][i];
+  v[n-1-i-j][i]=buf;
+ }else{
+  //exception
+ }
 }
 
-void rotate(const vvi& v) {
-  
+void rotate(const vvi& v, int dir = _right_) {
+ for (int i = 0; i < n - 1 - i; ++i) {
+  for (int j = i; j < n - 1 - i; ++j) {
+   shift(v, i, j, dir);
+  }
+ } 
 }
+
 mistakes & enhancements:
