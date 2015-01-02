@@ -1,0 +1,43 @@
+
+STATEMENT
+
+implement a function void reverse(char* str) in c or c++ which reverses a null-terminated string 
+
+SOLUTION  
+
+questions:
+
+can we use standart library functions like strlen ?
+what is the content of the string?
+what if it is pointing to something other than char ?
+how big is it?
+there are no questions as this function is so easy to program
+
+solution & analysis:
+
+just iterate to the middle and swap corresponding opposite elements
+time complexity: O(n) , where n - size of the string
+space complexity: O(1)
+
+code:
+
+void reverse(char* str) {
+  int rt = 0;
+  while(str[rt]){ //it is guaranteed to be a null terminated string so str[rt] exists
+    ++rt;
+  }
+  --rt;
+  int lt = 0;
+  while(lt < rt) {
+    char tmp = str[lt];
+    str[lt] = str[rt];
+    str[rt] = tmp;
+    ++lt;
+    --rt;
+  }
+}
+
+mistakes & improvements:
+
+it is a standart interview quesition, it could even be implemented recursively, but this is nightmare
+everything is OK
