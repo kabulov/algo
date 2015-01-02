@@ -39,7 +39,7 @@ code:
 using std::vector;
 
 1.
-void rotate_right(const vector<vector<int> >& v) {
+void rotate_right(vector<vector<int> >& v, int n) {
   int buf;
   for (int i = 0; i < n - 1 - i; ++i) {
     for (int j = i; j < n - 1 - i; ++j) {
@@ -62,14 +62,14 @@ typedef vector<vector<int> > vvi;
 
 enum { _right_ = 1, _left_ = -1 };
 
-void shift(const vvi& v, int i, int j, int dir = _right_) {
+void shift(vvi& v, int n, int i, int j, int dir = _right_) {
  int buf;
  if (dir == _right_) {
   buf = v[n-1-i-j][i];
   v[n-1-i-j][i]=v[n-1-i][n-1-i-j];
   v[n-1-i][n-1-i-j]=v[i+j][n-1-i];
   v[i+j][n-1-i]=v[i][j];
-  v[i][j]=tmp; }else
+  v[i][j]=buf; }else
  if (dir == _left_) {
   buf = v[i][j];
   v[i][j]=v[i+j][n-1-i];
@@ -81,10 +81,10 @@ void shift(const vvi& v, int i, int j, int dir = _right_) {
  }
 }
 
-void rotate(const vvi& v, int dir = _right_) {
+void rotate(vvi& v, int n, int dir = _right_) {
  for (int i = 0; i < n - 1 - i; ++i) {
   for (int j = i; j < n - 1 - i; ++j) {
-   shift(v, i, j, dir);
+   shift(v, n, i, j, dir);
   }
  } 
 }
