@@ -91,5 +91,111 @@ int compress(string& s) {
 
 mistakes & enhancements:
 
+1.
+the book doesnt take into account the case when the string has 0 length
+and gets the first element, but this is an exception
 
+2.
+why didnt i use built in methods like std::to_string(int) ?
+because i tried to do everything inplace, lets try it no in place
+
+3.
+i didnt take into account that it is 1 + to_string(cnt).size() instead 1 + cnt;
+
+code:
+
+#include <string>
+
+using std::string;
+using std::to_string;
+
+int get_compressed_size(const string& s) { //s.size() > 0 guarantee
+	int ret = 0;
+	int cnt = 1;
+	for (int i = 1; i < s.size(); ++i){
+		if (s[i]==s[i-1]) {
+			++cnt;
+		}else{
+			ret += 1 + to_string(cnt).size();
+			cnt=1;
+		}
+	}
+	ret += 1 + to_string(cnt).size();
+	return ret;
+}
+
+string compress(const string& s) {
+  if (s.size() == 0) {
+    return s;
+  }
+  int compressed_size = get_compressed_size(s);
+  if (compressed_size >= s.size()) {
+  	return s;
+  }
+  string ret;
+	ret.reserve(compressed_size);
+  int old_pos;
+  int new_pos = 0;
+  while (new_pos < s.size()) {
+  	old_pos = new_pos;
+  	++new_pos;
+  	while(new_pos < s.size() && s[new_pos]==s[old_pos]){
+  		++new_pos;
+  	}
+  	ret.push_back(s[old_pos]);
+  	ret.append(to_string(new_pos - old_pos));
+  }
+  return ret;
+}
+
+2.
+
+#include <string>
+
+using std::string;
+using std::to_string;
+
+int get_compressed_size(const string& s) { //s.size() > 0 guarantee
+	int ret = 0;
+	int cnt = 0;
+	char last = s[0];
+	for (int i = 1; i < s.size(); ++i) {
+		if (s[i]==last) {
+			++cnt;
+		}else{
+			ret += 1 + to_string(cnt).size();
+			last=s[i];		
+			cnt = 1;
+		}
+	}
+	ret += 1 + to_string(cnt).size();
+	return ret;
+}
+
+string compress(const string& s){
+	if (s.size() == 0 ){
+		return s;
+	}
+	int compressed_size = get_compressed_size(s);
+	if (compressed_size >= s.size()) {
+		return s;
+	}
+	string ret;
+	ret.reserve(compressed_size);
+	int cnt = 1;
+	char last = s[0];
+	for (int i = 1; i < s.size(); ++i) {
+		if (s[i] == last) {
+			++cnt;
+		}else{
+			ret.push_back(last);
+			ret.append(to_string(cnt));
+			last = s[i];
+			cnt = 1;
+		}
+	}
+	ret.push_back(last);
+	ret.append(to_string(cnt));
+	return ret;
+}
 
