@@ -1,0 +1,93 @@
+
+STATEMENT
+
+implement a method to perform basic string compression using the counts of repeated characters.
+for example, string abbccc would become a1b2c3.
+if the 'compressed' string would not become smaller than the original string,
+your method should return the original string
+
+SOLUTION
+
+questions:
+
+should that happen in place ?
+what do we do if the original string is made up of integers, 
+we should use some character as a delimiter between a digit and the count ?
+is it case sensitive ? e.g. aaaAAA is a3A3 or a6(A6)
+do we take into account spaces ? or skip them ?
+
+solution & analysis & design:
+
+lets do that in place and return the old len
+first count the result len and if it is smaller than the length of the original string then
+iterate from front to back and  count each contiguous sequence of same chars and count their amount and 
+supsede it with the char and the amoun
+time complexity: O(n), where n is the length of the original string
+space complexity: O(1), assuming that everything is taking place in place
+
+code:
+
+#include <string>
+
+using std::string;
+
+int append_num_to_string(string& s, int& len, int num){
+  int rev = 0;
+  while(num){
+    rev = rev * 10 + num % 10;
+    num /= 10;
+  }
+  while(rev){
+    s[len]=rev%10;
+    rev /= 10;
+    ++len;
+  }
+}
+
+int get_new_len(const string& s) {
+  int new_len = 0;
+  int cnt = 1;
+  for (int i = 1; i < s.size(); ++i) {
+    if (s[i] == s[i-1]){ 
+      ++cnt;
+    }else{
+      new_len += cnt + 1;
+      cnt = 1;
+    }  
+  }
+  new_len += cnt + 1;
+	return new_len;
+}
+
+int compress(string& s) {
+  if (s.size() == 0) {
+    return 0;
+  }
+  int old_len = s.size();
+	int new_len = get_new_len(s);
+	if (new_len >= old_len) {
+    return old_len;
+  }
+  new_len = 0;
+  int old_pos;
+  int new_pos = 0;
+  while (new_pos < old_len) {
+    old_pos = new_pos;
+    ++new_pos;
+    while(new_pos < old_len && s[new_pos] == s[old_pos]) {
+      ++new_pos;
+    }
+    s[new_len]=s[old_pos];
+    ++new_len;
+		append_num_to_string(s,new_len,new_pos-old_pos);
+	}
+  s.resize(new_len);
+  s.shrink_to_fit();
+  return old_len;
+}
+
+
+mistakes & enhancements:
+
+
+
