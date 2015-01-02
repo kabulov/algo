@@ -1,0 +1,66 @@
+
+STATEMENT
+
+given an image represented by an NXN matrix, where each pixel in the image is 4 bytes,
+write a method to rotate the image by 90 degrees. can you do this in place ?
+
+SOLUTION
+
+questons:
+1.
+right or left ?
+
+2.
+can we use ints nXn int matrix for storing the image ?
+
+3.
+maybe there is some additional information that could ease the process
+(like 90% of elements are zeroes, dunno how to use this:) )
+
+solution & analysis & design:
+
+1.
+just in place rotation
+assume that we are rotating 90 degrees to the right
+just have to derive formulas
+formulas: 
+for (int i = 0; i < n-1-i; ++i) {
+ for (int j = i; j < n - 1 - i; ++j) {
+  (i,j)->(i+j,n-1-i)->(n-1-i,n-1-i-j)->(n-1-i-j,i)->(i,j)
+ }  
+}
+time complexity:O(nXn)
+space complexity: assuming that we do in place, O(1)
+
+code:
+
+1.
+void rotate_right(const vector<vector<int> >& v) {
+  int buf;
+  for (int i = 0; i < n - 1 - i; ++i) {
+    for (int j = i; j < n - 1 - i; ++j) {
+      buf = v[n-1-i-j][i];
+      v[n-1-i-j][i]=v[n-1-i][n-1-i-j];
+      v[n-1-i][n-1-i-j]=v[i+j][n-1-i];
+      v[i+j][n-1-i]=v[i][j];
+      v[i][j]=tmp;
+    }
+  }  
+}
+
+2.
+typedef vector<vector<int> > vvi;
+
+void shift(const vvi& v, int i, int j, int dir = 1) {
+  if (dir == 1) {
+  
+  }else
+  if (dir == -1) {
+  
+  }else{}
+}
+
+void rotate(const vvi& v) {
+  
+}
+mistakes & enhancements:
