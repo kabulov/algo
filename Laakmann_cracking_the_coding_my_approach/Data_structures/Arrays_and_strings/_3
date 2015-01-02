@@ -89,3 +89,54 @@ is comparison case sensitive ?
 2.
 take whitespaces into account ?
 
+3.
+could use std::string::compare
+to improve code 1
+
+4.
+could check if < 0 when decreasing
+to improve code 2
+
+code:
+
+1. improved
+
+#include <algorithm>
+#include <string>
+
+using std::sort;
+using std::string;
+
+bool isPermutationOfTheOther (string lhs, string rhs) { //string& if we are allowed to change them
+  if (lhs.size() != rhs.size()) {
+    return false;
+  }
+  sort(lhs.begin(),lhs.end());
+  sort(rhs.begin(),rhs.end());
+  return lhs.compare(rhs) == 0;
+}
+
+2. improved
+
+#include <string>
+#include <vector>
+
+using std::string;
+using std::vector;
+
+bool isPermutationOfTheOther(const string& lhs, const string& rhs, int charset_size = 256) {
+  if (lhs.size() != rhs.size()) {
+    return false;
+  }
+  vector<int> charset(charset_size,0);
+  for (int i = 0; i < lhs.size(); ++i) {
+    ++charset[lhs[i]];
+  }
+  for (int i = 0; i < rhs.size(); ++i) {
+    if (--charset[rhs[i]] < 0) {
+      return false;
+    }
+  }
+  return true;
+}
+
