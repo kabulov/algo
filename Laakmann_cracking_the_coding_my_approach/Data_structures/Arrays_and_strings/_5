@@ -32,6 +32,7 @@ code:
 using std::string;
 
 int append_num_to_string(string& s, int& len, int num){
+  int old_len = len;
   int rev = 0;
   while(num){
     rev = rev * 10 + num % 10;
@@ -42,6 +43,7 @@ int append_num_to_string(string& s, int& len, int num){
     rev /= 10;
     ++len;
   }
+  return old_len;
 }
 
 int get_new_len(const string& s) {
