@@ -100,7 +100,7 @@ why didnt i use built in methods like std::to_string(int) ?
 because i tried to do everything inplace, lets try it no in place
 
 3.
-i didnt take into account that it is 1 + to_string(cnt).size() instead 1 + cnt;
+i somehow skipped that it is 1 + to_string(cnt).size() instead 1 + cnt;
 
 code:
 
