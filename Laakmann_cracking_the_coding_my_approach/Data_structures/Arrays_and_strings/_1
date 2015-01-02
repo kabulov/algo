@@ -1,0 +1,137 @@
+
+STATEMENT
+
+implement an algorithm to determine if a string has all unique elements.
+what if you cannot use additional data structures?
+
+SOLUTION
+
+questions:
+
+is it a string of characters(lowercase or uppercase exceptionally) or it is a string of digits ?
+what range do element codes fall in (what is the aplhabet) ?
+what is its length ? is it big ? e.g can it be > 10^6 ? may it be an empty string ?
+do we have it in RAM or it is so big that it cannot be kept in RAM entirely ?
+what are time and space constraints ?
+
+solution & analysis:
+
+1. 
+run through all elements and compare them with the first element
+if any of the comparisons returns false, then some elements of the given string vary
+else it has all unique elements
+
+time complexity: O(n), where n is the size of a string
+space complexity: O(1) for loop variables, no need in additional variables or space, in-place algorthm
+
+2.
+we could sum up all codes and divide the total sum by n(size of a string)
+then compare each element with the ratio
+
+3.
+sort then compare first and last
+
+4.
+if the difference between the smallest character code and the biggest character code is D then 
+just allocate a chunk of memory with D elements, fill it with zeroes
+then count the amount of each code and
+if the amount of all except for one is zero, and this except is n then OK, else not OK
+
+code:
+
+#include <string>
+#include <iostream>
+
+using std::string;
+using std::cin;
+
+int main() {
+  string s;
+  cin >> s;
+  size_t n = s.size();
+  bool all_unique = true;
+  for(size_t i = 1; i < n; ++i) {
+    if (s[i]!=s[0]){
+      all_unique = false;
+      break;
+    }
+  }
+  if(all_unique){
+    //do_stuff
+  }else{
+    //do_stuff
+  }
+  return 0;
+}
+
+mistakes & imporvements:
+
+1. 
+first and the biggest mistakes being unable to resolve(or bad english?) that the statements required 
+to determine if all character that are presented in a string are uniquely preside there, the 
+statement did not mean to determine whether all characters are equivalent.
+
+2.
+a good question in question part would be is it a unicode or ascii.
+ascii then char or string and strlen (size_t strlen(const char*);) and cin
+unicode wchar_t or wcstring and wcslen (size_t wcslen(const wchar_t* );) and wcin (which is tied to cin)
+
+questions:
+
+is it a unicode string or an ascii string?
+
+solution & analysis:
+
+1.
+stupid one: compare each character to each other character of the string
+time complexity: O(n^2)
+space complexity: O(1)
+
+2.
+less stupid one: consider a given string as a vector of chars and sort it
+time complexity: O(nlogn);
+space complexity: O(1+logn), for recursion in sort
+feature: alters the string
+
+3.
+the better one: if codeset is in relatively small range then 
+allocate the corresponding amount of space filled with zeroes,
+and run through the string and check if some character meets twice
+time complexity: O(n), where n - size of a string
+space complexity: O(m), where m - charset size
+
+#include <string>
+#include <vector>
+
+using std::string;
+using std::vector;
+
+bool is_all_unique(const string& s, const int charset_size = 256){
+  if (s.size() > charset_size) {
+    return false;
+  }
+  vector<char> flag(charset_size, 0);
+  for (size_t i = 0; i < s.size(); ++i) {
+    int code = s[i];
+    if (v[code]) {
+      return false;
+    }
+    v[code] = true;
+  }
+  return true;  
+}
+
+//assuming that we are using 'a' to 'z' only
+bool is_all_unique(const string& s) {
+  int flag = 0;
+  for (int i = 0; i < s.size(); ++i) {
+    int pos = s[i]-'a';
+    if ((flag>>pos) & 1) {
+      return false;
+    }
+    flag |= 1 << pos;
+  }
+  return true;
+}
+
+
