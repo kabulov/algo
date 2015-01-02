@@ -1,0 +1,91 @@
+
+STATEMENT
+
+given two strings, write a method to decide if one is a permutation of the other
+
+SOLUTION
+
+questions:
+
+are they null terminated string or it doesnt matter ?
+are they unicode or ascii strings ?
+what is the length? is it bigger than 10^6 ?
+what is the charset ? what is the length of the charset ?
+they must have equal length !
+can we change given strings? 
+
+solution & analysis & design:
+
+1.
+we compare lengths of strings and if they are equal
+we can sort chars in strings, and compare two vectors of chars
+time complexity: o(nlogn), n-size of the bigger string
+space complexity: in place
+
+2.
+if charset is not big and e.g. both have chars in segment [a,b]
+then we can count amount of each  char in each string and compare 
+correspoding numbers in charsets
+
+code:
+
+1.
+
+#include <algorithm>
+#include <string>
+
+using std::sort;
+using std::string;
+
+bool isPermutationOfTheOther (string lhs, string rhs) { //string& if we are allowed to change them
+  if (lhs.size() != rhs.size()) {
+    return false;
+  }
+  sort(lhs.begin(),lhs.end());
+  sort(rhs.begin(),rhs.end());
+  for (int i = 0; i < lhs.size(); ++i) {
+    if (lhs[i] != rhs[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+2. 
+
+#include <string>
+#include <vector>
+
+using std::string;
+using std::vector;
+
+bool isPermutationOfTheOther(const string& lhs, const string& rhs, int charset_size = 256) {
+  if (lhs.size() != rhs.size()) {
+    return false;
+  }
+  vector<int> charset(charset_size,0);
+  for (int i = 0; i < lhs.size(); ++i) {
+    ++charset[lhs[i]];
+  }
+  for (int i = 0; i < rhs.size(); ++i) {
+    --charset[rhs[i]];
+  }
+  for (int i = 0; i < charset_size; ++i) {
+    if (charset[i]!=0){
+      return false;
+    }
+  }
+  return true;
+}
+
+//we could use charset vector for both strings and then compare them, using only ++ and positive numbers
+//instead of using ++ and -- then, which makes us use int instead of e.g. unsigned int
+
+mistakes & enhancements:
+
+1.
+is comparison case sensitive ?
+
+2.
+take whitespaces into account ?
+
