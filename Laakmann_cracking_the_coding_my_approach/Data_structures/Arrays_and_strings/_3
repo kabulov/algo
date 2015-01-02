@@ -113,7 +113,7 @@ bool isPermutationOfTheOther (string lhs, string rhs) { //string& if we are allo
   }
   sort(lhs.begin(),lhs.end());
   sort(rhs.begin(),rhs.end());
-  return lhs.compare(rhs) == 0;
+  return lhs.compare(rhs) == 0; //or return lhs == rhs, as operator == is overloaded for strings
 }
 
 2. improved
