@@ -90,3 +90,22 @@ void rotate(vvi& v, int n, int dir = _right_) {
 }
 
 mistakes & enhancements:
+
+we could introduce variables first, last and offset in each step 
+and make first = layer, last = n - 1 - layer, offset = i - first
+where layer is the variable corresponding to the outer loop
+and then
+coordinates of the points we are rotating would become much clear and comprehensible
+
+for (int layer = 0; layer < n - 1 - layer; ++layer) {
+ int first = layer;
+ int last = n - 1 - layer;
+ for (int i = first; i < last; ++i) {
+  int offset = i - first;
+  int buf = v[first][i];
+  v[first][i]=v[last-offset][first];
+  v[last-offset][first]=v[last][last-offset];
+  v[last][last-offset]=v[i][last];
+  v[i][last]=buf;
+ }
+}
