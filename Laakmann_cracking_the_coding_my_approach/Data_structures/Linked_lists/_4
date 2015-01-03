@@ -34,4 +34,26 @@ public:
   T data;
 };
 
+template<class T>
+List<T>* partition(List<T>* head, T x) { //return new head
+  if (head == NULL) {
+    return NULL;
+  }
+  List<T>* new_head = head;
+  List<T>* prev = head;
+  head = head->next;
+  while (head != NULL){
+    if (head->data < x) { //op < for T
+      prev->next = head->next;
+      head->next = new_head;
+      new_head = head;
+      head = prev->next;
+    } else {
+      head = head->next;
+      prev = prev->next;
+    }
+  }
+  return new_head;
+}
+
 mistakes & enhancements:
