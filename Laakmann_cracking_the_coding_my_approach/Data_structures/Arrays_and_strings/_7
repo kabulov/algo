@@ -52,3 +52,8 @@ void setToZero(vvi& v, int m, int n) {
 
 mistakes & enhancements:
 
+1.
+to make it more space efficient we could use a bit vector instead of int vector
+
+2.
+we could use char vector instead of int vector
