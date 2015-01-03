@@ -1,0 +1,67 @@
+
+STATEMENT
+
+implement an algorithm to delete a node in the middle of a singly linked list,
+given only access to that node
+
+SOLUTION
+
+questions:
+
+can we copy data ?
+
+solution & analysis & design:
+
+no choice, just copy over
+time complexity: O(n)
+space complexity: O(1)
+
+code:
+
+#include <cstdlib> //NULL
+
+template<class T>
+class List {
+public:
+  List<T>* next;
+  T data;
+};
+
+template<class T>
+T removeFromMiddle(List<T>* middle) {
+  if (middle == NULL) {
+    return NULL;
+  }
+  if (middle->next == NULL) {
+    //notify somehow that cannot be performed
+  }
+  T ret = middle->data; 
+  List<T>* follow = middle;
+  do {
+    middle = follow;
+    follow = follow->next;
+    middle->data = follow->data;
+  } while (follow->next != NULL);
+  middle->next = NULL;
+  delete follow;
+  return ret;
+}
+
+mistakes & enhancements:
+
+just had to point out that if the given element is the last in the list then
+we cannot do anything, e.g. we could mark it as NOT_ELEM or alike
+
+but this is an array thinking, check this out
+
+template<class T>
+bool removeFromMiddle(List<T>* middle) {
+  if (middle == NULL || middle->next == NULL) {
+    return false;
+  }
+  List<T>* next = middle.next;
+  middle->data = next->data;
+  middle->next = next->next;
+  //delete next; 
+  return true;
+}
