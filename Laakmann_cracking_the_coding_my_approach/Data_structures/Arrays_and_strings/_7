@@ -1,0 +1,54 @@
+
+STATEMENT
+
+write an algorithm such that if an element of an MxN matrix is 0, its entire row and column are set to 0
+
+SOLUTION
+
+questions:
+
+are we allowed to allocate additional memory?
+are there only integer elements in the matrix ?
+how big is m and n ?
+
+solution & analysis & design:
+
+1.
+if we are allowed to use additional space 
+then we allocate one array with size = max(m,n),
+and assign 1,2 or 3 depending on whether i`th row,
+column or row and column have to be set to zero.
+or just allocate two vectors: sizes : m and n;
+time complexity: O(n^2)
+space complexirt: O(max(n,m))
+
+code:
+
+#include <vector>
+
+using std::vector;
+
+typedef vector<vector<int> > vvi;
+
+void setToZero(vvi& v, int m, int n) {
+  vector<int> row(m,0);
+  vector<int> col(n,0);
+  for (int i = 0; i < m; ++i) {
+    for (int j = 0; j < n; ++j) {
+      if (v[i][j] == 0) {
+        row[i]=1;
+        col[j]=1;
+      }
+    }
+  }
+  for (int i = 0; i < m; ++i) {
+    for (int j = 0; j < n; ++j) {
+      if (row[i] || col[j]){
+        v[i][j]=0;
+      }
+    }
+  }
+}
+
+mistakes & enhancements:
+
