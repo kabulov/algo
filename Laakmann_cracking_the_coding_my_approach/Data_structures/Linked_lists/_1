@@ -136,9 +136,70 @@ int main () {
 }
 
 3.
+template<class T>
+class List {
+public:
+	List<T>* next;
+	T data;
+};
+
+typedef List<int>* ptr;
+
+template<class T> 
+void removeDuplicates(List<T>* lt) {
+	while (lt != NULL) {
+		List<T>* cur = lt->next, prev = lt;
+		while (cur != NULL) {
+			if (lt->data == cur->data) {
+				prev->next = cur->next;
+			}else{
+				prev = cur;
+			}
+			cur = cur->next;
+		}
+		lt = lt->next;
+	}
+}
 
 4.
+#include <list>
 
+using std::list;
+
+template<typename T>
+void removeDuplicates(list<T>& lt) {
+	for (list<T>::iterator it = lt.begin(); it != lt.end();++it) {
+		list<T>::iterator iter = it;
+		iter++;
+		while (iter != lt.end()) {
+			if (*iter == *it) {
+				iter = lt.erase(iter);
+			}else{
+				iter++;
+			}
+		}
+	}
+}
+
+#include <iostream>
+
+int main () {
+	
+	list<int> lt;
+	for (int i = 0; i < 6; ++i) {
+		lt.push_back(i / 2);
+	}
+	for (list<int>::iterator it = lt.begin(); it != lt.end(); ++it) {
+		std::cout << *it << " ";	
+	}
+	std::cout << std::endl;
+	removeDuplicates(lt);
+	for (list<int>::iterator it = lt.begin(); it != lt.end(); ++it) {
+		std::cout << *it << " ";	
+	}
+	std::cout << std::endl;
+	return 0;
+}
 
 mistakes & enhancements:
 
@@ -148,3 +209,30 @@ HASHes are so damn important...
 use std::list
 3.
 design your own templatized list
+
+4.
+solution 3 could be rewritten this way
+
+template<class T>
+class List {
+public:
+	List<T>* next;
+	T data;
+};
+
+typedef List<int>* ptr;
+
+template<class T> 
+void removeDuplicates(List<T>* lt) {
+	while (lt != NULL) {
+		List<T>* cur = lt;
+		while(cur->next != NULL) {
+			if (cur->next->data == lt->data) {
+				cur->next = cur->next->next;
+			}else{
+				cur = cur->next;
+			}
+		}
+		lt = lt->next;
+	}
+}
