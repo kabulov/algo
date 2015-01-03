@@ -155,7 +155,22 @@ List<T>* kth(List<T>* head, int k) {
 }
 
 4.
+#include <utility> //std::pair
 
+using std::pair;
+
+template<class T>
+pair<int, List<T>*> kth(List<T>* head, int k) {
+	if (head == NULL) {
+		return make_pair(0, NULL);
+	}
+	pair<int, List<T>*> node = kth(head->next, k);
+	++node.first;
+	if (node.first == k) {
+		node.second = head;
+	}
+	return node;
+}
 
 5.
 template<class T>
