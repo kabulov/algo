@@ -1,0 +1,175 @@
+
+STATEMENT
+
+implement an algorithm to find the kth to last element of a singly linked list
+
+SOLUTION
+
+questions:
+do we know the size of the list ?
+can k be bigger than the size of the list ? 
+what should we return if k > size ?
+
+solution & analysis & design:
+
+1.
+if we know the size of the list (say n) then
+we just find the n-k th element from the beginning
+
+2.
+if we dunno the size of the list,
+we first find the size, then find the element
+
+3.
+recursively ?
+
+code:
+
+1.
+template<class T>
+class List {
+public:
+  List<T>* next;
+  T data;
+};
+
+template<class T>
+List<T>* kth(List<T>* head, int size, int k) {
+  if (k > size){
+    return NULL;
+  } 
+  k = size - k;
+  while(k--){
+    head = head->next;
+  }
+  return head;
+}
+
+2.
+template<class T>
+class List {
+public:
+  List<T>* next;
+  T data;
+};
+
+template<class T>
+List<T>* kth(List<T>* head, int k) {
+  int size = 0;
+  List<T>* runner = head;
+  while(runner != NULL) {
+    ++size;
+    runner = runner->next;
+  }
+  if (k > size){
+    return NULL;
+  } 
+  k = size - k;
+  while(k--){
+    head = head->next;
+  }
+  return head;
+}
+
+3. 
+recursive
+so you will have to return the counter and the kth element 
+at the same time, so it is all up to handling this moment.
+can we pass additional argument(except list and k) in a function ?
+what if we cant ? do we have to just print the kth
+
+mistakes & enhancements:
+
+but it turns out that there are tons of recursive solutions:
+1.
+dont pass anything additional except list and k, then just print when you get to kth element
+2.
+pass additional counter argument and return pointer to kth element
+3.
+keep static counter variable
+4.
+return pairs of counter and kth element
+5.
+use two pointers, with distance equal to k between them
+
+code:
+
+list is defined everywhere as follows:
+
+temlate<class T>
+class List {
+public:
+  List<T>* next;
+  T data;
+};
+
+and we assume 1 indexation:
+last = first, last - 1 -> second, etc..
+
+also take into account that
+to use NULL you should include e.g. cstdlib
+
+1.
+template<class T>
+int kth(List<T>* head, int k) {
+  if (head == NULL) {
+    return 0;
+  }  
+  int pos = kth(head->next, k) + 1;
+  if (pos == k) {
+    //cout << head->data
+  }
+  return pos;
+}
+
+2.
+template<class T>
+List<T>* kth(List<T>* head, int k, int& i) {
+  if (head == NULL) {
+    i = 0;
+    return NULL;
+  }
+  List<T>* cur = kth(head->next, k, i);
+  ++i;
+  if (i == k) {
+    return head;
+  }
+  return cur;
+}
+
+call as : kth(head, k, some_int_var_equal_to_zero);
+
+3.
+template<class T>
+List<T>* kth(List<T>* head, int k) {
+	if (head == NULL) {
+		return NULL;
+	}
+	static int i = 0;
+	List<T>* node = kth(head->next, k);
+	++i;
+	if (i == k) {
+		return head;
+	}
+	return node;
+}
+
+4.
+
+
+5.
+template<class T>
+List<T>* kth(List<T>* head, int k) {
+  List<T>* kahead = head;
+  for (int i = 0; i < k; ++i) {
+    if (kahead == NULL) {
+      return NULL;
+    }
+    kahead = kahead->next;
+  }
+  while(kahead != NULL){
+    kahead = kahead->next;
+    head = head->next;
+  }
+  return head;
+}
