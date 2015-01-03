@@ -1,0 +1,37 @@
+
+STATEMENT
+
+write code to parition a linked list around a value x, 
+such that all nodes less than x come before all nodes greater than or equal to x.
+
+SOLUTION
+
+questions:
+
+do we have operator < defined for x ?
+are we doing everything in place ?
+is it important to have value x in the middle of a list afterall ?
+
+solution & analysis & design:
+
+it is obvious that we are given a head of list, otherwise it would be not possible in some cases
+to partition around value x
+
+1.
+if it is not important to have layout like : less than x, equal to x, greater than x - then
+we just iterate through the list from the head and put every value smaller than x in head of the list
+time complexity: O(n)
+space complexity: O(1)
+
+code:
+
+#include <cstdlib> //NULL
+
+template<class T>
+class List {
+public:
+  List<T>* next;
+  T data;
+};
+
+mistakes & enhancements:
