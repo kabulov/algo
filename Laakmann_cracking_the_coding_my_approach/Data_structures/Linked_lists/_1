@@ -1,0 +1,150 @@
+
+STATEMENT
+
+write code to remove duplicates from an unsorted linked list
+follow up:
+how would you solve a problem if a temporary buffer is not allowed
+
+SOLUTION
+
+questions:
+
+what does a list contain ? integers ? doubles? strings ?
+how long is it ?
+are we given std::list or our own implementation ?
+should we leave first or last of repeating elements ? (aba -> ba or ab ?)
+
+solution & analysis & design:
+
+1.
+if we are given the standart (data+next) then 
+we just iterate through the list, keep track of the previous element
+and use HASH to avoid duplicates
+time complexity: O(n)
+space complexity: O(n)
+
+2.
+if we are given std::list, we do the same
+just implementation changes
+
+3.
+if we are not allowed to store additional data then
+we just use stupid O(n^2) algorithm, where
+as soon as we encounter an element we run throught 
+the rest of the list and delete duplicates of this elemnt
+time complexity: O(n^2)
+space complexity: O(1)
+
+4.
+do as in 3. but given std::list
+
+code:
+
+1.
+template<class T>
+class List {
+public:
+	List<T>* next;
+	T data;
+};
+
+#include <set>
+using std::set;
+
+template<class T>
+void removeDuplicates(List<T>* lt) {
+	set<T> st;
+	List<T>* prev = NULL;
+	while (lt != NULL) {
+		if (st.find(lt->data) == st.end()) {
+			st.insert(lt->data);
+			prev = lt;
+		}else{
+			prev->next = lt->next; //prev is not null here
+		}
+		lt = lt->next;
+	}
+}
+
+typedef List<int>* ptr;
+#include <iostream>
+
+int main () {
+	ptr list = NULL;
+	for (int i = 0; i < 6; ++i) {
+		ptr cur = new List<int>();
+		cur->data = i / 2;
+		cur->next = list;
+		list = cur;
+	}
+	ptr iter = list;
+	while(iter != NULL) {
+		std::cout << iter->data << " ";
+		iter = iter->next;
+	}
+	std::cout << "\n";
+	removeDuplicates(list);
+	iter = list;
+	while(iter != NULL) {
+		std::cout << iter->data << " ";
+		iter = iter->next;
+	}
+	std::cout << "\n";
+}
+
+2.
+#include <list>
+#include <hash_set>
+
+using std::list;
+using std::hash_set;
+
+template<typename T>
+void removeDuplicates(list<T>& lt){
+  hash_set<T> st;
+  for (list<T>::iterator iter = lt.begin(); iter != lt.end();) {
+    if (st.find(*iter) == st.end()){
+      st.insert(*iter);
+      ++iter;
+    }else{
+      iter = lt.erase(iter);
+    }
+  }
+}
+
+#include <iostream>
+
+using std::cin;
+using std::cout;
+using std::endl;
+
+int main () {
+  list<int> lt;
+  for (int i = 0; i < 3; ++i ){
+    lt.push_back(i);
+    lt.push_back(i);
+  }
+	for (list<int>::iterator it = lt.begin(); it != lt.end(); ++it){
+		cout << *it << endl;
+	}
+	cout << endl;
+  removeDuplicates(lt);
+	for (list<int>::iterator it = lt.begin(); it != lt.end(); ++it){
+		cout << *it << " ";
+	}
+	cout << endl;
+}
+
+3.
+
+4.
+
+
+mistakes & enhancements:
+
+1.
+HASHes are so damn important...
+2.
+use std::list
+3.
+design your own templatized list
