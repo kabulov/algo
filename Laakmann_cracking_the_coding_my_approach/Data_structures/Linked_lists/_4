@@ -57,3 +57,73 @@ List<T>* partition(List<T>* head, T x) { //return new head
 }
 
 mistakes & enhancements:
+
+quesitons & code:
+
+1.
+but what if we dont want to mess the original list ?
+
+template<class T>
+List<T>* partition(List<T>* head, T x) {
+  if (head == NULL) {
+    return NULL;
+  }
+  List<T>* start = NULL;
+  List<T>* end = NULL;
+  while (head != NULL){
+    List<T>* buf = new List<T>();
+    buf->data = head->data;
+    buf->next = NULL;
+    if (head->data < x) {
+      if (start == NULL) {
+        start = end = buf;
+      }else{
+        buf->next = start;
+        start = buf;
+      }
+    }else{
+      if (end == NULL) {
+        start = end = buf;
+      }else{
+        end->next = buf;
+        end = buf;
+      }
+    }
+    head = head->next;
+  }
+  return start;
+}
+  
+2.
+does it have to be stable ?!
+to make it stable we use two passes
+
+template<class T>
+List<T>* partition(List<T>* head, T x) {
+  if (head == NULL) {
+    return NULL;
+  }
+  List<T>* start = NULL;
+  List<T>* end = NULL;
+  for (int i = 0; i < 2; ++i) {
+    List<T>* runner = head;
+    while (runner != NULL) {
+      if ((i == 0 && runner->data < x) || (i == 1 && runner->data >= x)) {
+        if (end == NULL ){
+          List<T>* elem = new List<T>();
+          elem->data = runner->data;
+          elem->next = NULL;
+          end = start = elem;
+        } else {
+          List<T>* elem = new List<T>();
+          elem->data = runner->data;
+          elem->next = NULL;
+          end->next = elem;
+          end = elem;
+        }
+      } 
+      runner = runner->next;
+    }
+  }
+  return start;
+}
