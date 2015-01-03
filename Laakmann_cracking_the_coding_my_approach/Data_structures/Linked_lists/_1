@@ -236,3 +236,7 @@ void removeDuplicates(List<T>* lt) {
 		lt = lt->next;
 	}
 }
+
+5.
+and of course the main question was:
+is it a singly linked list or double linked list
