@@ -1,0 +1,38 @@
+
+STATEMENT
+
+assume you have a method isSubstring which checks if one word is a substring of another.
+given two strings, s1 and s2, write code to check if s2 is a rotation of s1 
+using only one call to isSubstring (e.g. google is a rotatio of legoog)
+
+SOLUTION
+
+questions:
+
+what is a complexity of isSubstring ?
+what is a parameter list of isSubstring ? does it take std::string or null terminated string?
+are we allowed to use additional space ?
+are we allowed to change given strings ?
+
+solution& analysis & complexity:
+
+1.
+we can just concatenate the string under question and then
+use once isSubstring. if it finds we are done, else 
+one is not a rotation of another
+
+code:
+
+#include <string>
+
+using std::string;
+
+//check if s2 is a substring of s1
+bool isSubstring(const string& s2, const string& s1);
+
+//check if s2 is a rotation of s1
+bool isRotation(const string& s2, const string& s1) {
+  return isSubstring(s1, s2 + s2); // operator + is overloaded for std::string
+}
+
+mistakes & enhancements:
