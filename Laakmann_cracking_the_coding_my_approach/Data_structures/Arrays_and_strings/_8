@@ -36,3 +36,22 @@ bool isRotation(const string& s2, const string& s1) {
 }
 
 mistakes & enhancements:
+
+1.
+I had to make some minor checks, in hurry...
+
+#include <string>
+
+using std::string;
+
+//check if s2 is a substring of s1
+bool isSubstring(const string& s2, const string s1);
+
+//check if s2 is a rotation of s1
+bool isRotation(const string& s2, const string& s1) {
+  if (s1.size() == s2.size() && s1.size() > 0) {
+    string s2s2= s2 + s2; // operator + is overloaded for std::string
+    return isSubstring(s1, s2s2); 
+  }
+  return false;
+}
