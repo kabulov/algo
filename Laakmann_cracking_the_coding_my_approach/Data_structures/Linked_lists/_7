@@ -34,6 +34,29 @@ typedef List* list;
 
 1.
 
+bool isPalindrome(list head) {
+  list runner = head;
+  list reverse = NULL;
+  while (runner != NULL) {
+    list node = new List(runner->data);
+    if (reverse == NULL) {
+      reverse = node;
+    }else{
+      node->next = reverse;
+      reverse = node;
+    }
+    runner = runner->next;
+  }
+  while (head != NULL) {
+    if (head->data != reverse->data){
+      return false;
+    }
+    head = head->next;
+    reverse = reverse->next;
+  }
+  return true;
+}
+
 2.
 
 bool isPalindromeHelper(list head, list& tail) {
@@ -62,6 +85,9 @@ bool isPalindrome(list head) {
 }
 
 3.
+go run and compare to corresponding element
+for in for, no...
 
 mistakes & enhancements:
+
 
