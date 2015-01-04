@@ -38,8 +38,18 @@ typedef List* list;
 
 bool isPalindromeHelper(list head, list& tail) {
   if (tail->next == NULL) {//even len
-    
+    tail = head->next;
+    return true;
   }
+  if (tail->next->next == NULL) {//odd len
+    tail = head->next->next;
+    return true;
+  }
+  tail = tail->next->next;
+  bool ret = isPalindromeHelper(head->next, tail);
+  ret &= head->data == tail->data;
+  tail = tail->next;
+  return ret;
 }
 
 bool isPalindrome(list head) {
