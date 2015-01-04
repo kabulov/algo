@@ -1,0 +1,43 @@
+
+STATEMENT
+
+describe how you would use a single array to implement three stacks
+
+SOLUTION
+
+questions:
+
+what is data ? ints ? other ?
+static array ? dynamic array ?
+whill there always be enough place ?
+
+solution & analysis & design
+
+1.
+just keep 2 cells for each element of the stack,
+first cell keeps the position of the previous element (-1 if first element of the stack)
+and second element is the element of the stack itself
+and also have to keep track of positions of first elements, maybe in some variables (3, for each stack)
+
+code:
+
+ i dont want to put code here, nothing to learn, just code
+
+mistakes & enhancements:
+
+so it just all boils down to understand that there is no perfect solution,
+it depends, and one can provice some complicated algorithm which takes
+into account frequencies of push pop operations, expected amount of elements
+in each stack and so on.
+
+two approaches are:
+1. make an array of fixed size 
+then e.g. divide it into 3 equal parts and give each part to each stack
+2. make an array of dynamic size, circular, shift maybe and so on
+3. like this : [a,b,c], treat each part like std::vector (increase by two when full, etc)
+but when e.g. increasing 'a', shift everything to the right, then if 
+the overall sizes of a,b,c are equal to n each, then amortized time 
+for each operation would be O(log(n))
+
+for code part, it is important to write clean and maintainable code, 
+divide into methods, declare and specify additional classes maybe
