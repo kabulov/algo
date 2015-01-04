@@ -69,3 +69,35 @@ list loopStart(list head) { //at least one element in the sequence, guaranteed t
 
 mistakes & enhancements:
 
+had to take into account that there may be no loop
+
+actially it could be done in 2n instead of 3n.
+assume noloop part has length K, loop part has length LOOP,
+as we move SLOW by one and FAST by two starting from HEAD both,
+when SLOW and FAST meet, fast will be K steps ahead of SLOW,
+which is SLOW will be LOOP - K%LOOP steps ahead of FAST,
+thus if we move now SLOW from head and FAST from its position in the loop
+until  they meet each other, we get for FAST : LOOP - K%LOOP + K%LOOP == LOOP,
+wbich means that FAST will be right at the beginning point of the loop;
+go ahead
+
+list startPoint(list head) {
+  if (head == NULL) { //can skip this 'if'
+    return NULL;
+  }
+  list slow = head;
+  list fast = head;
+  while (fast != NULL && fast->next != NULL) {
+    slow = slow->next;
+    fast = fast->next->next;
+  }
+  if (fast == NULL || fast->next == NULL) {
+    return NULL; //no loop
+  }
+  slow = head;
+  while (slow != fast) {
+    slow = slow->next;
+    fast = fast->next;
+  }
+  return slow;
+}
