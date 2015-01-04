@@ -90,6 +90,9 @@ list startPoint(list head) {
   while (fast != NULL && fast->next != NULL) {
     slow = slow->next;
     fast = fast->next->next;
+    if (slow == fast) {
+      break;
+    }
   }
   if (fast == NULL || fast->next == NULL) {
     return NULL; //no loop
