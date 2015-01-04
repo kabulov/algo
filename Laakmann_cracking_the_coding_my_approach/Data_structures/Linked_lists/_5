@@ -9,7 +9,7 @@ suppose the digits are stored in forward order. repeat the above problem.
 
 SOLUTION
 
-questoions:
+questions:
 
 do we have to store the resulting number in one of the given lists or create the new one ? new list
 is it possible for one of them to be empty ? no
@@ -20,6 +20,7 @@ zeroes in front of the number ?
 
 solution & analysis & design:
 
+lets use singly linked list
 just add two numbers, 'school method'
 time complexity: O(max(len of first, len of second))
 space complexity: O(max(len of first, len of second))
