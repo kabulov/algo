@@ -26,10 +26,10 @@ T min(const T& a, const T& b) {
 
 class empty_exception {};
 
-templace<class T>
+template<class T>
 class stack {
 public:
-  stack(int size):{
+  stack(int size){
     elems_.reserve(size);
     mins_.reserve(size);
   }
@@ -69,3 +69,111 @@ private:
 
 mistakes & enhancements:
 
+1.
+we could keep track (along with stack itself) not the whole second
+stack with mins of the same size as the stack, but
+pairs : min, sizeofstackwiththisnewmin;
+as mins only decrease 
+
+2.
+we could just keep track of mins, but unlike 1.
+we could just use <= instead <
+and one more stack would suffice, instead stack of pairs
+
+3.
+we could extend something like std::stack, then just declare
+
+code:
+
+1.
+keep track of pairs of mins and elems (bac space characteristics)
+
+#include <stack>
+#include <utility>
+
+using std::stack;
+using std::pair;
+
+template<class T>
+T min(const T& a, const T& b) {
+  return a < b ? a : b;
+}
+
+class empty_exception {};
+
+template<class T>
+class Stack {
+public:
+  Stack(){}
+  void push(T elem){
+		T minimal = elem;
+		if (!st.empty() && st.top().second < minimal) {
+			minimal = st.top().second;
+		}
+		st.push(make_pair(elem, minimal));
+	}
+  void pop(){
+		st.pop();
+	}
+  T top() {
+		return st.top().first;
+	}
+  T min(){
+		return st.top().second;
+	}
+private:
+	std::stack<std::pair<T,T> > st;
+};
+
+2.
+keep track of mins (good space characteristics)
+
+#include <vector>
+
+template<class T>
+T min(const T& a, const T& b) {
+  return a < b ? a : b;
+}
+
+class empty_exception {};
+
+template<class T>
+class stack {
+public:
+  stack(int size){
+    elems_.reserve(size);
+    mins_.reserve(size);
+  }
+  void push(T elem){
+    elems_.push_back(elem); elem <= mins_.top();
+		if (mins_.empty() || !(mins_.top() < elem)){
+			mins_.push_back(elem);
+		}	
+	}
+  T pop(){
+    if (elems_.empty()) {
+      throw empty_exception();
+    }
+    T ret = elems_.back();
+    elems_.pop_back();
+    if (ret == mins_.back()) {
+			mins_.pop_back();
+		}
+    return ret;
+  }
+  T top() {
+    if (elems_.empty()) {
+      throw empty_exception();
+    }
+    return elems_.back();
+  }
+  T min(){
+    if (mins_.empty()){
+      throw empty_exception();
+    }
+    return mins_.back();
+  }
+private:
+  std::vector<T> elems_;
+  std::vector<T> mins_;
+};
