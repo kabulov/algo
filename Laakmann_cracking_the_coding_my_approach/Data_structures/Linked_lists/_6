@@ -36,5 +36,36 @@ struct List {
   int data;
 };
 
+typedef List* list;
+
+void move(list& elem) {
+  elem=elem->next;
+}
+
+list loopStart(list head) { //at least one element in the sequence, guaranteed to have a loop
+  if (head->next == head) { //it turns out that loopStart works even without this if
+    return head;
+  }
+  list prev = head;
+  list next = head->next;
+  while(prev != next) { //pointer comparison here : any other way to compare these ?
+    move(prev);
+    move(next);
+    move(next);
+  }
+  //now both prev and next indicate the node in the loop, so lets find the length of the loop
+  list front = head;
+  do {//loop has len at least one
+    move(front);
+    move(next);
+  }while(prev != next);
+  //now we now the len of the loop
+  while(head != front) {
+    move(head);
+    move(front);
+  }
+  return head;
+}
+
 mistakes & enhancements:
 
