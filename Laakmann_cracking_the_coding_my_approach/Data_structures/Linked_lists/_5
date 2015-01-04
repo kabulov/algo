@@ -15,6 +15,8 @@ do we have to store the resulting number in one of the given lists or create the
 is it possible for one of them to be empty ? no
 what is the number system ? supposing that it is 10
 should the sum be represented in the same reversed manner ? yes
+follow up:
+zeroes in front of the number ?
 
 solution & analysis & design:
 
@@ -24,7 +26,9 @@ space complexity: O(max(len of first, len of second))
 
 code:
 
-#include <cstdlib>
+1. 
+
+#include <cstdlib> //NULL, or <utility>
 
 struct List {
   struct List* next;
@@ -34,8 +38,6 @@ struct List {
 
 typedef struct List TList;
 typedef struct List* PList;
-
-#include <cstdlib> //NULL, or <utility>
 
 int getDigit(PList digit) {
   return digit == NULL ? 0 : digit->digit;
@@ -74,6 +76,72 @@ PList add(PList fst, PList scd, int base = 10) { //maybe const & is not best sol
   return head;
 }
 
+2. follow up
+
+e.g. if we implement reverse(list) then we can heavily rely on this function, but lets do straightforward
+seems it is about recursion
+one option is to use comparison of pointers to determine wheter one number is 'went by'
+
+#include <cstdlib>
+
+struct List {
+  List* next;
+  int digit;
+  List(int d):digit(d),next(NULL) {}
+  void setNext(List* node) {
+    next = node;
+  }
+  bool hasNext(){
+    return next != NULL;
+  }
+};
+
+typedef List* PList;
+
+const int base = 10;
+
+int len(PList list) {
+  int ret = 0;
+  while(list != NULL) {
+    ++ret;
+    list = list->next;
+  }
+  return ret;
+}
+
+PList addSpecial(PList big, PList small, int diff) {
+  if (big->next == NULL && small->next == NULL) {
+    int new_digit = small->digit + big->digit;
+    PList node = new List(new_digit % base);
+    PList carry = new List(new_digit / base);
+    carry->setNext(node);
+    return carry;
+  } 
+  PList node = addSpecial(big->next, diff ? small : small->next, diff ? diff - 1 : 0);
+  int new_digit = node->digit + big->digit + (diff ? 0 : small->digit);
+  node->digit = new_digit % base;
+  PList carry = new List(new_digit / base);
+  carry->setNext(node);
+  return carry;
+}
+
+PList add(PList fst, PList scd) { //assume none of params is NULL, assume base is 10
+  int l1 = len(fst);
+  int l2 = len(scd);
+  PList ret = NULL;
+  if (l1 <= l2) {
+    ret = addSpecial(scd, fst, l2-l1);
+  }else{
+    ret = addSpecial(fst, scd, l1-l2);
+  }
+  return ret;
+}
 
 mistakes & enhancements:
 
+questios:
+follow up:
+can we pad zeroes befor given numbers ?
+seems we have to brake code into parts(methods).
+seems we have to make wrapper class, but it is not necessary as we have workaround
+seems we have to find lengths of numbers.
