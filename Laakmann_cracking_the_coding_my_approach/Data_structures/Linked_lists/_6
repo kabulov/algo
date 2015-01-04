@@ -1,0 +1,40 @@
+
+STATEMENT
+
+given a circular linked list, implement an algorithm which returns the node at the beginning of the loop
+
+SOLUTION
+
+questions:
+
+is it guaranteed to have a loop ?
+is it a singly linked list ?
+can we check equality of pointers ?
+
+solution & analysis & design:
+
+typica : detect if a singly linked list has a loop
+
+it is easy as we use two pointers and move one one step forward
+and move second two steps forward in each step
+but 
+here we also have to find the node at the beginning of the loop
+we could use some extra space to indicate the amount of predecessors of the node
+but lets instead use no extra space but run the list 3 times
+
+time complexity: O(n)
+space complexity: O(1)
+
+code:
+
+lets assume that the data is int to prevent templates
+
+#include <cstdlib>
+
+struct List {
+  List* next;
+  int data;
+};
+
+mistakes & enhancements:
+
