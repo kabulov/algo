@@ -1,0 +1,57 @@
+
+STATEMENT
+
+implement a function to check if a linked list is palindrome
+
+SOLUTION
+
+questions:
+
+can we use additional space ?
+length of list is even ?
+recursion ?
+
+solution & analysis & design:
+
+1.
+reverse and compare
+
+2.
+recursion
+
+3.
+very stupid O(n^2) straightforward solution
+
+code:
+
+struct List {
+  List* next;
+  int data;
+  List(int d):data(d),next(NULL){}
+};
+
+typedef List* list;
+
+1.
+
+2.
+
+bool isPalindromeHelper(list head, list& tail) {
+  if (tail->next == NULL) {//even len
+    
+  }
+}
+
+bool isPalindrome(list head) {
+  if (head==NULL || head->next==NULL){
+    return true;
+  }
+  list tail = head->next;
+  bool ret = isPalindromeHelper(head, tail);
+  return ret;
+}
+
+3.
+
+mistakes & enhancements:
+
