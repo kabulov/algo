@@ -1,0 +1,79 @@
+
+STATEMENT
+
+you have two numbers represented by a linked list, where each node contains single digit.
+the digits are stored in reverse order, such that the 1`s digit is at the head of the list.
+write a function that adds the two numbers and return the sum as a linked list.
+follow up:
+suppose the digits are stored in forward order. repeat the above problem.
+
+SOLUTION
+
+questoions:
+
+do we have to store the resulting number in one of the given lists or create the new one ? new list
+is it possible for one of them to be empty ? no
+what is the number system ? supposing that it is 10
+should the sum be represented in the same reversed manner ? yes
+
+solution & analysis & design:
+
+just add two numbers, 'school method'
+time complexity: O(max(len of first, len of second))
+space complexity: O(max(len of first, len of second))
+
+code:
+
+#include <cstdlib>
+
+struct List {
+  struct List* next;
+  int digit;
+  List(int d):digit(d),next(NULL){}
+};
+
+typedef struct List TList;
+typedef struct List* PList;
+
+#include <cstdlib> //NULL, or <utility>
+
+int getDigit(PList digit) {
+  return digit == NULL ? 0 : digit->digit;
+}
+
+void moveForward(PList& elem) {
+  if (elem == NULL) return;
+  elem = elem->next;
+}
+
+//maybe something like operator+
+PList add(PList fst, PList scd, int base = 10) { //maybe const & is not best solution, params are just pointers
+  if (fst == NULL || scd == NULL) {
+    return NULL;
+  }
+  PList head = NULL;
+  PList tail = NULL;
+  int carry = 0;
+  int new_digit;
+  while (fst != NULL || scd != NULL) {
+    new_digit = carry + getDigit(fst) + getDigit(scd);
+    carry = new_digit / base;
+    new_digit %= base;
+    if (tail == NULL) {
+      head = tail = new TList(new_digit);  
+    } else {
+      tail->next = new TList(new_digit);
+      moveForward(tail);
+    }
+    moveForward(fst);
+    moveForward(scd);
+  }
+  if (carry != 0) {//tail != NULL for sure here
+    tail->next = new TList(carry);
+  }
+  return head;
+}
+
+
+mistakes & enhancements:
+
