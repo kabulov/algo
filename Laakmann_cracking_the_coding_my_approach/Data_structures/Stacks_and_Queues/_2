@@ -1,0 +1,71 @@
+
+STATEMENT
+
+how would you design a stack which, in addition to push and pop, 
+also has a function min which returns the minimum element ?
+push, pop, and min should all operate in O(1) time
+
+SOLUTION
+
+questions:
+
+are we allowed to use additional space ?
+
+solution & analysis & design:
+
+just keep another stack with mins of prefixes
+
+code:
+
+//we only need operator< implemented for T
+
+template<class T>
+T min(const T& a, const T& b) {
+  return a < b ? a : b;
+}
+
+class empty_exception {};
+
+templace<class T>
+class stack {
+public:
+  stack(int size):{
+    elems_.reserve(size);
+    mins_.reserve(size);
+  }
+  void push(T elem){
+    elems_.push_back(elem);
+    T minimal = elem;
+    if (!mins_.empty() && mins_.top() < elem) {
+      minimal = mins_.top();
+    }
+    mins_.push_back(minimal);
+  }
+  T pop(){
+    if (elems_.empty()) {
+      throw empty_exception();
+    }
+    T ret = elems_.back();
+    elems_.pop_back();
+    mins_.pop_back();
+    return ret;
+  }
+  T top() {
+    if (elems_.empty()) {
+      throw empty_exception();
+    }
+    return elems_.back();
+  }
+  T min(){
+    if (mins_.empty()){
+      throw empty_exception();
+    }
+    return mins_.back();
+  }
+private:
+  std::vector<T> elems_;
+  std::vector<T> mins_;
+};
+
+mistakes & enhancements:
+
