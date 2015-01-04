@@ -113,13 +113,11 @@ PList addSpecial(PList big, PList small, int diff) {
   if (big->next == NULL && small->next == NULL) {
     int new_digit = small->digit + big->digit;
     PList node = new List(new_digit % base);
-    PList carry = new List(new_digit / base);
-    carry->setNext(node);
-    return carry;
-  } 
-  PList node = addSpecial(big->next, diff ? small : small->next, diff ? diff - 1 : 0);
-  int new_digit = node->digit + big->digit + (diff ? 0 : small->digit);
-  node->digit = new_digit % base;
+  } else {
+    PList node = addSpecial(big->next, diff ? small : small->next, diff ? diff - 1 : 0);
+    int new_digit = node->digit + big->digit + (diff ? 0 : small->digit);
+    node->digit = new_digit % base;
+  }
   PList carry = new List(new_digit / base);
   carry->setNext(node);
   return carry;
