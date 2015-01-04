@@ -90,4 +90,13 @@ for in for, no...
 
 mistakes & enhancements:
 
+1.
+we actually need to compare only first halves !
+
+2.
+
+
+4.
+there was a solution including stack !
+know the len or dunno the len(slow/fast use)
 
