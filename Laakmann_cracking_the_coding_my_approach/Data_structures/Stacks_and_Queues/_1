@@ -14,14 +14,84 @@ whill there always be enough place ?
 solution & analysis & design
 
 1.
-just keep 2 cells for each element of the stack,
-first cell keeps the position of the previous element (-1 if first element of the stack)
-and second element is the element of the stack itself
-and also have to keep track of positions of first elements, maybe in some variables (3, for each stack)
+keep tops for each stack
+put them all in a vector of pairs, first - prev elementpos, second - item
+also additional - fourth stack - stack of empty places, keep his top too
+while push check, if place in fourth stack, put there, else push_back to 
+given placeholder
 
 code:
 
- i dont want to put code here, nothing to learn, just code
+
+#include <vector>
+#include <utility>
+#include <exception>
+
+using std::vector;
+using std::pair;
+using std::make_pair;
+using std::exception;
+
+typedef pair<int, int> pii;
+
+const int NEXIST = -1;
+const int EMPTY = 3;
+
+//pair <first-start, second-top>
+vector<int> stack(4, NEXIST);
+
+//one array that takes 3 stacks, like trie
+//pair<first-pos of previous, second-data>
+vector<pii> place;
+
+bool empty(int stack_no) {
+	return stack[stack_no] == NEXIST;
+}
+
+int top(int stack_no) {
+	if (empty(stack_no)){
+		throw exception();
+	}
+	return place[stack[stack_no]].second;
+}
+
+void push(int stack_no, int item) {
+	pii new_item = make_pair(NEXIST, item);
+	if (!empty(stack_no)){
+		new_item.first = stack[stack_no];
+	}
+	if (empty(EMPTY)) {
+		stack[stack_no] = place.size();
+		place.push_back(new_item);
+	}else{
+		int top = stack[EMPTY];
+		int new_top = place[top].first;
+		place[top] = new_item;
+		stack[stack_no] = top;
+		stack[EMPTY] = new_top;
+	}
+}
+
+int pop(int stack_no) {
+	if (empty(stack_no)){
+		throw exception();
+	}
+	int top = stack[stack_no];
+	int ret = place[top].second;
+	stack[stack_no] = place[top].first;
+	place[top].first = stack[EMPTY];
+	stack[EMPTY] = top;
+	return ret;
+}
+
+//would it not be better to put this all in a class to account for any type T ?
+
+int main( ){
+
+	return 0;
+}
+
+ 
 
 mistakes & enhancements:
 
