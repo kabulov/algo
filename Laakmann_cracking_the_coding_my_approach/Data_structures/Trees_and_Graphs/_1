@@ -15,6 +15,7 @@ solution & analysis & design:
 
 use recursion, dfs, which returns int - max height, then + 1 and return
 time complexity: O(n), n - amount of nodes
+space complexity: O(h), h - height, recursion
 
 1.
 tree - vector<vector<int>> 
@@ -64,3 +65,16 @@ int dfs(Node* node, bool& balanced) {
 
 mistakes & enhancements:
 
+we could return -1 when tree is unbalanced
+
+int dfs(Node* node) {
+	if (node == NULL) {
+		return 0;
+	}
+	int lt = dfs(node->left);
+	if (lt == -1) return -1;
+	int rt = dfs(node->right);
+	if (rt == -1) return -1;
+	if (abs(rt - lt) > 1) return -1;
+	return 1 + max(lt, rt);
+}
