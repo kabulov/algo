@@ -14,9 +14,34 @@ SOLUTION
 
 questions:
 
+can we not delete allocated chunks as amount of elems decreases? yes
 
 solution & analysis & design:
+
+1.
+if we use linkedlist to implement stack, we can have stack of stacks,
+delete or add stack in any place of a stack of stacks in O(1);
+time complexity : as other operations have O(1) complexity too we have 
+overall complexity O(m), m = number of operations
+of course constant is big as we do a lot of dynamic allocations and deletions
+
+2.
+if we are given stacks on vector basis then there are multiple ways to 
+do it in the way that overall complexity is linear against the amount of 
+operations assuming that we delete stacks when we have too many of them in empty state.
 
 code:
 
 mistakes & enhancements:
+
+1.
+slow solution was offered in the soltuion section
+
+follow up:
+one would assume that all stacks are full, thus we push bottom of next to top of prev
+when popped from prev.
+
+a lot of coding, divide into functions, gives the opportunity to lay down the skeleton of the code
+before dealing with some of the details.
+
+the problem is not conceptually tough but requires a lot of coding. 
