@@ -1,0 +1,68 @@
+
+STATEMENT
+
+given a directed graph, design an algorithm to find out whether there is a route between two nodes
+
+SOLUTION
+
+questions:
+
+are we allowed multiple edges, loops ? we could delete them
+how big is our stack ? dfs or bfs  
+is graph connected ? as we could delete directions and check if two nodes are in one connected copmponent 
+how do we represent graph ? adjacency list
+
+solution & analysis & design:
+
+1.
+we could start from both nodes and do bfs iteratively
+
+2.
+bfs from one node
+
+3.
+dfs from one node
+
+the thing is to decide how we 'mark' the destination
+either we pass dest node on each step of recursion
+either we allocate additional chunk of memory to mark the dest point
+either it is a global variable
+
+time complexity: O(n + m), n-nodes,m-edges
+space complexity: O(n)
+
+code:
+
+#include <vector>
+using namespace std;
+
+vector<vector<int> > g;
+vector<char> used;
+
+int src, dest;
+
+bool dfs(int v) {
+	used[v] = true;
+	if (v == dest) {
+		return true;		
+	}
+	for (int i = 0, sz=g[v].size(); i < sz; ++i) {
+		int to = g[v][i];
+		if (!used[to]) {
+			bool found = dfs(to);
+			if (found) {
+				return true;
+			}
+		}
+	}
+}
+
+int main () {
+
+	//reead src, dest
+	bool hasPath = dfs(src);
+	
+	return 0;
+}
+
+mistakes & enhancements:
