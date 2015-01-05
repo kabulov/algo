@@ -1,0 +1,146 @@
+
+STATEMENT
+
+an animal shelter holds only dogs and cats, and operates on a strictly FIFO basis.
+People must adopt either the "oldest" (based on arrival time) of all animals at the shelter.
+or they can select whether they would prefer a dog or a cat (and will receive the oldest animal of that type).
+they cannot select which specific animal they would like. create the data structures to maintain this system
+and implement operations such as push_back, pop_front_any, pop_front_dog, pop_front_cat.
+you may use build in LinkedList data structure.
+
+SOLUTION
+
+questions:
+
+are we supposed to build classes and etc on our own ?
+we could reload push_back if we make up two separate classes without parent 
+otherwise we would have to use RTTI (dynamic_cast<>)
+
+solution & analysis & design :
+
+1.
+we could use two lists but elements of lists are pairs consisting of animal and arrival time
+but this consumes extra memory
+
+2.
+we could use one list but would have to keep track of first and last animal of each type
+then we would have to iterate through the list each time we have to pick the oldest animal
+of specific type, which would increase time complexity(inly constants, not magnitude), 
+but require less memory
+
+code:
+
+1.
+
+
+#include <string>
+using std::string;
+
+class Animal {
+public:
+	Animal(string name):name(name){}
+	void setOrder(int n) {
+		order = n;
+	}
+	int getOrder() const {
+		return order;
+	}
+	bool isOlderThan(const Animal& other) {
+		return order < other.getOrder();
+	}
+	virtual ~Animal(){}
+protected:
+	string name;	
+private:
+	int order;
+};
+
+class Dog : public Animal {
+	Dog(string name):Animal(name) {}
+};
+
+class Cat : public Animal {
+	Cat(string name):Animal(name) {}
+};
+
+#include <list>
+using std::list;
+
+#include <memory>
+using std::shared_ptr;
+
+class AnimalList {
+public:
+	AnimalList():timer(0),dogs(),cats(){}
+	void push_back(Animal* anim){ //not shared_ptr because cannot create shared<derived> from shared<parent>
+		anim->setOrder(timer);
+		timer++;
+
+		Cat* c = dynamic_cast<Cat*>(anim);
+		Dog* d = dynamic_cast<Dog*>(anim);
+		if (c){
+			shared_ptr<Cat> p(c);
+			cats.push_back(p);
+		}else
+		if (d){
+			shared_ptr<Dog> p(d);
+			dogs.push_back(p);
+		}//else
+	}
+	shared_ptr<Dog> pop_front_dog() {
+		shared_ptr<Dog> ret = dogs.front();
+		dogs.pop_front();
+		return ret;
+	}
+	shared_ptr<Cat> pop_front_cat() {
+		shared_ptr<Cat> ret = cats.front();
+		cats.pop_front();
+		return ret;
+	}
+	shared_ptr<Animal> pop_front_any() {
+		if (cats.empty()){
+			return pop_front_dog();
+		}
+		if (dogs.empty()) {
+			return pop_front_cat();
+		}
+		if (dogs.front()->isOlderThan(*cats.front())) {
+			return pop_front_dog();
+		}else{
+			return pop_front_cat();
+		}
+	}
+
+private:
+	int timer;
+	list<shared_ptr<Dog> > dogs;
+	list<shared_ptr<Cat> > cats;
+};
+
+
+mistakes & enhancements:
+
+it was mainly about the design, handling dynamic_cast maybe
+
+shared_ptr is more trouble than aid
+god bless we can created shared_ptr<parent> from shared_ptr<derived> (but not vice versa)
+
+code:
+
+1.
+alternatively, we could implement push_back this way
+
+void push_back(auto_ptr<Animal> param){ //or shared_ptr
+	Animal* anim = new Animal(*param);
+
+	Cat* c = dynamic_cast<Cat*>(anim);
+	Dog* d = dynamic_cast<Dog*>(anim);
+	if (c){
+		shared_ptr<Cat> p(c);
+		cats.push_back(p);
+	}else
+	if (d){
+		shared_ptr<Dog> p(d);
+		dogs.push_back(p);
+	}//else
+}
