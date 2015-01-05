@@ -65,10 +65,9 @@ void push(int stack_no, int item) {
 		place.push_back(new_item);
 	}else{
 		int top = stack[EMPTY];
-		int new_top = place[top].first;
+		stack[EMPTY] = place[top].first;
 		place[top] = new_item;
 		stack[stack_no] = top;
-		stack[EMPTY] = new_top;
 	}
 }
 
