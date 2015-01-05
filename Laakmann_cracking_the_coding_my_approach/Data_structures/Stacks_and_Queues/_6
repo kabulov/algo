@@ -61,6 +61,47 @@ mergesort:
 on each level of recursion we would divide array into two parts (in two stacks)
 sort each, and merge them back in sorted order into the original stack
 
+#include <stack>
+using std::stack;
+
+template<class T>
+void sort(stack<T>& st) { //or return new stack ?
+	if (st.size() <= 1) {
+		return;
+	}
+	stack<T> lt;
+	stack<T> rt;
+	while (!st.empty()) {
+		lt.push(st.top());
+		st.pop();
+		if (!st.empty()){
+			rt.push(st.top());
+			st.pop();
+		}
+	}
+	sort(lt);
+	sort(rt);
+	while (!(lt.empty() && rt.empty())) {
+		if (lt.empty() || rt.empty()){
+			st.push(lt.empty() ? rt.top() : lt.top());
+			lt.empty() ? rt.pop() : lt.pop();
+		} else { 
+			st.push(lt.top() > rt.top() ? lt.top() : rt.top());
+			lt.top() > rt.top() ? lt.pop() : rt.pop();
+		}
+	}
+	while(!st.empty()){
+		lt.puh(st.top());
+		st.pop();
+	}
+	while(!lt.empty()){
+		st.push(lt.top());
+		lt.pop();
+	}
+}
+
+
 quicksort:
 on each level of recursion we use two stacks to put elements based on a pivot element. 
 sort each. and merge back into the original stack.
+
