@@ -63,8 +63,8 @@ void solve(int n) {
 	for (int i = n; i > 0; --i) {
 		st1.push(i);
 	}
-	hanoi(st1, st3, st2, n);
-	cout << "done" << endl;
+	bool good = hanoi(st1, st3, st2, n);
+	cout << (good ? "good" : "bad") << endl;
 	while(!st3.empty()){
 		cout << st3.top() << endl;
 		st3.pop();
