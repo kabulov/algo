@@ -51,3 +51,16 @@ void sort(stack<T>& first) { //or return new stack ?
 }
 
 mistakes & enhancements:
+
+what if we had unlimited stacks -> could we sort faster ?
+
+sure, we cannot sort faster than O(nlogn) using supposed model
+but we can achieve O(nlogn). Just remember two major algos that do this in O(nlogn).
+
+mergesort:
+on each level of recursion we would divide array into two parts (in two stacks)
+sort each, and merge them back in sorted order into the original stack
+
+quicksort:
+on each level of recursion we use two stacks to put elements based on a pivot element. 
+sort each. and merge back into the original stack.
