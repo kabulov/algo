@@ -1,0 +1,68 @@
+
+STATEMENT
+
+implement a queue using two stacks
+
+SOLUTION
+
+questions:
+
+ints ? other?
+
+solution & analysis & design:
+
+straightforward
+
+code:
+
+#include <stack>
+using std::stack;
+
+template<class T>
+class queue {
+public:
+	queue();
+  T front();
+	void push(T item);
+  void pop();
+
+private:
+  stack<T> fst;
+  stack<T> scd;
+};
+
+template<class T>
+T queue<T>::fron() {
+  if (fst.empty() && scd.empty()) {
+    //throw here
+  }
+  if (scd.empty()){
+    while(!fst.empty()){
+      scd.push(fst.top());
+      fst.pop();
+    }
+  }
+  return scd.top();
+}
+
+template<class T>
+inline void queue<T>::push(T item) {
+   fst.push(item);
+}
+
+template<class T>
+queue<T>::queue():fst(),scd(){}
+
+template<class T>
+void queue<T>::pop() {
+  if(scd.empty()){
+    while(!fst.empty()){
+      scd.push(fst.top());
+      fst.pop();
+    }
+  }
+  scd.pop();
+}
+
+mistakes & enhancements:
+
