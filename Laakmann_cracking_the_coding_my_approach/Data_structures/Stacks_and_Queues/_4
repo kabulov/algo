@@ -1,0 +1,85 @@
+
+STATEMENT
+
+in the classic problem of the towers of hanoi, you have 3 towers and n disks of different sizes 
+which can slide onto any tower. the puzzle starts with disks sorted in ascending order of size
+from top to bottom.  you have following constraints:
+1. only one disk can be moved at a time
+2. a disk is slid off the top of one tower onto the next rod
+3. a disk can only be placed on top of the larger disk
+
+write a program to move the disks from the first tower to the last using stacks.
+
+SOLUTION
+
+questions:
+
+check if bigger is placed on smaller ? yes
+print moves ? yes
+
+solution & analysis & design
+
+base case and build, recursive solution, solve PROBLEM(n-1) then solve PROBLEM(n)
+
+time complexity: 2^n-1 moves, derived from T(n)=T(n-1)+1+T(n-1), T(1)=1
+space complexity: O(n), n - amount of disks
+
+code:
+
+//we could use indexes of stacks instead references to them 
+
+#include <iostream>
+#include <stack>
+using namespace std;
+typedef stack<int> type;
+
+bool move(type& from, type& to) { //!from.empty() guaranteed
+	if (!to.empty() && from.top() > to.top()) {
+		return false;
+	}
+	cout << from.top() << endl;
+	to.push(from.top());
+	from.pop();
+	return true;
+}
+
+bool hanoi(type& from, type& to, type& mid, int n){
+	if (n == 1) {
+		return move(from,to);
+	}
+	bool ret = true;
+	ret &= hanoi(from,mid,to,n-1);
+	ret &= move(from,to);
+	ret &= hanoi(mid,to,from,n-1);
+	return ret;
+}
+
+//from rod 1, to rod 3, using rod 2
+void solve(int n) {
+	if (n <= 0) {
+		return;
+	}
+	stack<int> st1, st2, st3;
+	for (int i = n; i > 0; --i) {
+		st1.push(i);
+	}
+	hanoi(st1, st3, st2, n);
+	cout << "done" << endl;
+	while(!st3.empty()){
+		cout << st3.top() << endl;
+		st3.pop();
+	}
+}
+
+int main () {
+
+	int n;
+	cin >> n;
+	solve(n);
+
+	return 0;
+}
+
+mistakes & enhancements:
+
+indices would be better to see the result...
