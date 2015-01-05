@@ -1,0 +1,66 @@
+
+STATEMENT
+
+implement a function to check if a binary tree is balanced. for the purposes of this question,
+a balanced tree is defined to be a tree such that the heights of the two subtrees of any node
+never differ by more than one
+
+SOLUTION
+
+questions:
+
+height - the amt nodes on the maximum downward path ?
+
+solution & analysis & design:
+
+use recursion, dfs, which returns int - max height, then + 1 and return
+time complexity: O(n), n - amount of nodes
+
+1.
+tree - vector<vector<int>> 
+
+2.
+tree - node : T data, Node* left, Node* right
+
+code:
+
+#include <cstdlib>
+#include <algorithm>
+using namespace std;
+
+struct Node {
+	int data;
+	Node *left;
+	Node *right;
+	Node(int d):data(d),left(NULL),right(NULL){}
+};
+
+bool dfs(Node* node, int& ht) {
+	if (node == NULL){
+		ht = 0;
+		return true;
+	}
+	int lt, rt;
+	bool blt, brt;
+	blt = dfs(node->left, lt);
+	brt = dfs(node->right, rt);
+	ht = max(lt, rt) + 1;
+	return blt & brt & (abs(rt - lt) <= 1);
+}
+
+OR
+
+int dfs(Node* node, bool& balanced) {
+	if (node == NULL) {		
+		balanced = true;
+		return 0;
+	}
+	bool blt, brt;
+	int lt = dfs(node->left, blt);
+	int rt = dfs(node->right, brt);
+	balanced = blt & brt & (abs(rt - lt) <= 1);
+	return 1 + max(lt, rt);
+}
+
+mistakes & enhancements:
+
