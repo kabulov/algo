@@ -1,0 +1,53 @@
+
+STATEMENT
+
+write a program to sort a stack in ascending order (with biggest items on the top).
+you may use at most one additional stack to hold items, but you may not copy the elements
+into any other data structure (such as an array). The stack supports the following operations:
+push, pop, top, empty
+
+SOLUTION
+
+questions:
+
+what are elements ? ints ? other ?
+how big is it ?
+
+solution & analysis & design:
+
+1.
+just iterate through given stack, put elements in second stack,
+if top of given stack <= top of second stack, go ahead,
+else swap tops 
+(that is, keep first.top, first.push(second.top), second.pop, first.push(keep))
+
+timme complexity: O(n^2) worst case, e.g. if we are given descending toward top direction sequence
+space complexity: O(1) except given stacks
+
+code:
+
+#include <stack>
+using std::stack;
+
+template<class T>
+void sort(stack<T>& first) { //or return new stack ?
+  stack<T> second;
+  while (!first.empty()) {
+    if (second.empty() || first.top() <= second.top()) {
+      second.push(first.top());
+      first.pop();
+    }else{
+      T keep = first.top();
+      first.pop();
+      first.push(second.top());
+      second.pop();
+      first.push(keep);
+    }
+  }
+  while (!second.empty()) {
+    first.push(second.top());
+    second.pop();
+  }
+}
+
+mistakes & enhancements:
