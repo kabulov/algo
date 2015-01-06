@@ -1,0 +1,90 @@
+
+STATEMENT
+
+design an algorithm and write code to find the first common ancestor of two nodes
+in a binary tree. avoid storing additional nodes in a dta structure. NOTE: 
+this is not necessarily a binary search tree.
+
+SOLUTION
+
+questions:
+
+can we use hash or other ?
+do we have link to parent ?
+
+solutions & analysis & design:
+
+1.
+if it were binaray search tree, then we would traverse from root
+while both nodes are in one subtree
+
+2.
+if we are allowed links to parent then we could traverse from both
+and , say, keep hash_set and hash pointers of visited nodes to hash_set
+but this may violate the rule that says to avoid additional info
+
+3.
+if we are not allowed to store links to parent then 
+we just start from the root and go down
+
+code:
+
+#include <utility>
+using namespace std;
+
+struct Node {
+	int data;
+	Node *left, *right;
+	Node(int d):data(d), left(NULL), right(NULL) { }
+};
+
+class solver {
+public:
+	Node* ancestor(Node* root, Node* a, Node* b);
+
+private:
+	pair<Node*, bool> ancestorHelper(Node*);
+	static Node* a;
+	static Node* b;
+};
+
+Node* solver::ancestor(Node* root, Node* a, Node* b){
+	if (root == NULL || a == NULL || b == NULL) {
+		return NULL;
+	}
+	if (a == b) {
+		return a;
+	}
+	this->a = a;
+	this->b = b;
+	pair<Node*, bool> anc = ancestorHelper(root);
+	return anc.first; //!!
+}
+
+pair<Node*, bool> solver::ancestorHelper(Node* node) {
+	if (node == NULL) {
+		return pair<Node*, bool>(NULL, false);
+	}
+	pair<Node*, bool> left = ancestorHelper(node->left);
+	if (left.second) {
+		return left;
+	}
+	pair<Node*, bool> right = ancestorHelper(node->right);
+	if (right.second) {
+		return right;
+	}
+	if (left.first == NULL && right.first == NULL) {
+		if (node == a || node == b) {
+			return make_pair(node, false);
+		}
+		return pair<Node*, bool>(NULL, false);
+	}
+	if (node != a && node != b && (left.first == NULL || right.first == NULL)) {
+		return left.first == NULL ? right : left;
+	}
+	return make_pair(node, true);
+}
+
+mistakes & enhancements:
+
+seems to be all ok
