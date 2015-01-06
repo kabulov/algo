@@ -63,3 +63,15 @@ Node* buildBST(const vector<int>& v, int size) {
 
 mistakes & enhancements:
 
+actually we could take away couple of lines
+
+Node* build(const vector<int>& v, int lt, int rt) {
+	if (lt >= rt) {
+		return NULL;
+	}
+	int mt = (lt + rt) / 2;
+	Node* node = new Node(v[mt]);
+	node->left = build(v, lt, mt);
+	node->right = build(v, mt + 1, rt);
+	return node;
+}
