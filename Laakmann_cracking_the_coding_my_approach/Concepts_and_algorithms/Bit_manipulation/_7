@@ -1,3 +1,79 @@
 
 SOLUTION
 
+#include <vector>
+using namespace std;
+
+const int INT_BITS_SIZE = 32;
+
+int soBeIt(const vector<int>& v, int column) {
+	if (column >= INT_BITS_SIZE) {
+		//something went wrong;
+		return -1;
+	}
+	if (v.size() == 0) {
+		return 0;
+	}
+	vector<int> ones;
+	ones.reserve(v.size()/2+1);
+	vector<int> zeroes;
+	zeroes.reserve(v.size()/2+1);
+	for (int i = 0; i < v.size(); ++i) {
+		if ((v[i]>>column)&1){
+			ones.push_back(v[i]);
+		}else{
+			zeroes.push_back(v[i]);
+		}	
+	}
+	if (zeroes.size() <= ones.size()){
+		int v = soBeIt(zeroes, column+1);
+		return (v << 1) | 0;
+	}else{//>
+		int v = soBeIt(ones, column+1);
+		return (v << 1) | 1;
+	}
+}
+
+int findMissing(const vector<int>& v) {
+	int answer = soBeIt(v, 0);
+	return answer;
+}
+
+#include <iostream>
+
+int main () {
+
+	int n, missing;
+	cin >> n >> missing;
+	vector<int> numbers;
+	numbers.reserve(n);
+	for (int i = 0; i <= n; ++i) {
+		if (i == missing) {
+			continue;
+		}
+		numbers.push_back(i);
+	}
+
+	int found = findMissing(numbers);
+	cout << missing << " " << found << endl;
+	cout << boolalpha << (found == missing) << endl;
+
+	return 0;
+}
+
+if (n % 2 == 0) count(0) == 1 + count(1)
+if (n % 2 == 1) count(0) == count(1)
+
+if (v % 2 == 0 && n % 2 == 0) count(0) == count(1)
+if (v % 2 == 0 && n % 2 == 1) count(0) < count(1)
+if (v % 2 == 1 && n % 2 == 0) count(0) > count(1)
+if (v % 2 == 1 && n % 2 == 1) count(0) > count(1)
+
+so if (count(0) <= count(1)) then
+    bit was 0
+   else
+    bit was 1
+
+n + n / 2 + n / 4 + ... = 2n in O(n) : time and space
+
+beautiful
