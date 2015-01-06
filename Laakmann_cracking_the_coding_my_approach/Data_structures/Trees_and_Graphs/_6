@@ -58,3 +58,21 @@ Node* next(Node* node) {
 
 mistakes & enhancements:
 
+we could return NULL if it was the rightmost elem of the tree
+
+Node* next(Node* node) {
+	if (node == NULL) {
+		return NULL;
+	}
+	if (node->right != NULL) {
+		node = node->right;
+		while (node->left != NULL){ 
+			node = node->left;
+		}
+		return node;
+	}
+	while (node->parent != NULL && node->parent->data < node->data) {
+		node = node->parent;
+	}
+	return node->parent;
+}
