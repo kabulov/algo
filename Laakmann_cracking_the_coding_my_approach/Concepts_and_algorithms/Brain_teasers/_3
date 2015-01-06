@@ -9,3 +9,6 @@ SOLUTION
 6.pour everything from 3 to 5 -> 3 empty, 5 has 1
 7.fill up 3 -> 3 full, 5 has 1
 8.pour all from 3 to 5 -> 3 empty, 5 has 4
+
+ax+by=c;
+if c is not divisible by gcd(a,b) then no solution
