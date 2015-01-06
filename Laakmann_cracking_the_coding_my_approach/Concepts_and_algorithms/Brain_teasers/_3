@@ -1,0 +1,11 @@
+
+SOLUTION
+
+1.fill up 3 -> 3 full, 5 empty
+2.pour all from 3 to 5 -> 3 empty, 5 has 3
+3.fill up 3 -> 3 full, 5 has 3
+4.pour 3 to 5 until 5 is full -> 3 has 1, 5 full
+5.pour 5 to somehere -> 3 has 1, 5 empty
+6.pour everything from 3 to 5 -> 3 empty, 5 has 1
+7.fill up 3 -> 3 full, 5 has 1
+8.pour all from 3 to 5 -> 3 empty, 5 has 4
