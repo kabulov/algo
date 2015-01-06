@@ -1,0 +1,11 @@
+
+SOLUTION
+
+given a, b;
+
+int c = a ^ b;
+int result = 0;
+while (c) {
+  ++result;
+  c &= c-1;
+}
