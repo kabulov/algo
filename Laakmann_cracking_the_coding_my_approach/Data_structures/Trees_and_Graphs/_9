@@ -1,0 +1,40 @@
+
+STATEMENT
+
+you are given a binary tree in which each node contains a value. design an algorithm
+to print all paths which sum to a given value. the path does not need to start or 
+end at the root or leaf
+
+SOLUTION
+
+questions:
+
+what are values ? ints ? doubles? negatives and zeroes allowed ?
+balanced ?
+may path start at node 'a', go up, then go down to 'b' ?
+
+soltion & analysis & design:
+
+what is a balanced tree ?
+is it all about definition or about making the depth of a tree about O(logn)
+
+balanced is usually when for each node :
+1.depth of left and right differ by at most one
+2.left subtree is balanced
+3.right subtree is balanced
+
+but for red blac tree depths of subtrees may vary at most 2 times
+however it is a balancde tree in the sense that it assures 
+O(log(n)) height
+
+code:
+
+look each node and bfs or dfs from it
+
+time complexity: O(n^2)
+space complexity: O(n) if dfs
+
+mistakes & enhancements:
+
+the author considers only paths from that start at some node and go up only
+never up, .. up, then down... down, 
