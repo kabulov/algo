@@ -1,0 +1,16 @@
+
+SOLUTION
+
+width - from left to right
+height - from top to bottom
+
+lets assume that array has 0 indexation
+lets assume that y is counted from top of the screen
+lets assume that array has length n
+lets assume that x1 and x2 has 0 indexation in a row
+lets assume that we dont check if y is out of range or negative (0<=(y/w)<(n/w))
+
+then we put -1(0xFF) to full bytes from (w/8)*y+x1 to (w/8)*y+x2, (x1, x2 - numbers of pixels)  
+
+be careful with the case where both pixels are in one byte
+
