@@ -1,0 +1,50 @@
+
+STATEMENT
+
+given a binary tree, design an algorithm which creates linked list of all nodes 
+at each depth 
+
+SOLUTION
+
+quesions:
+
+should we store them in vector
+should we store nodes at each depth in some sorted order ?
+
+solution & analysis & design:
+
+just dfs, keep everything in vector
+time complexity: O(n)
+space complexity: O(n)
+
+code:
+
+#include <vector>
+using namespace std;
+
+struct Node {
+	int data;
+	Node *left, *right;
+	Node(int d):data(d), left(NULL), right(NULL){}
+};
+
+void go(Node* node, vector<vector<int> >& levels, int dep) {
+	if (levels.size() == dep) {
+		levels.push_back(vector<int>());
+	}
+	levels[dep].push_back(node->data);
+	go(node->left, levels, dep+1);
+	go(node->right, levels, dep+1);
+}
+
+vector<vector<int> > get_levels(Node* root) {
+	vector<vector<int> > ret;
+	if (root != NULL) {
+		go(root, ret, 0);
+	}
+	return ret;
+}
+
+mistakes & enhancements:
+
+if we used bfs, we wouldnt need extra space for stack
