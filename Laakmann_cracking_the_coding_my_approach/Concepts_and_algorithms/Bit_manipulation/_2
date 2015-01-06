@@ -32,3 +32,6 @@ string binaryString(double d) {
 }
 
 mistakes & enhancements:
+
+we could also use comparison with 1/2, 1/4, ...etc
+need thorough test cases
