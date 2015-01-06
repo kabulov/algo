@@ -1,0 +1,33 @@
+
+STATEMENT
+
+you have two very large binary trees: t1, with millions of nodes, and t2, with hundreds of nodes. 
+create and algorithm to decide if t2 is a subtree of t1. 
+
+a tree t2 is a subtree of t1 of there exists a node in t1, such that the subtree of n is identical 
+to t2. 
+
+SOLUTION
+
+questions:
+
+does it necessarily have to be the deepest possible node of t1 ?
+do we have to compare numbers on nodes too or we are just comparing tree structures ?
+are we allowed to use additional memory ?
+
+solution & analysis & design:
+
+1.
+great solution is to write into a string pre and inorder traversals of both trees
+and find one string in another (e.g. knuth-morris-pratt algorithm)
+
+2.
+just dfs and compare t2 with each subtree beginning at the current dfs node of t2
+complexity is nm but if we halt dfs as soon as we find inconsistency 
+we will get a good average complexity assuming some uniform distribution considerations
+
+code:
+
+mistakes & enhancements:
+
+there is a great ground to talk with interviewer about complexity estimates
