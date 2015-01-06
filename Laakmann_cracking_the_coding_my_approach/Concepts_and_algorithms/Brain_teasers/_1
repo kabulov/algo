@@ -13,3 +13,9 @@ if heavy bottle has index:
 1 through 9: rational number, [int_part],[real_part], real part is i
 10 through 18: the sum will be 45(i-9)45
 19: the sum will be 1145045
+
+just get i pills from ith bottle
+
+the average witout overhead would be 1+2+..+20=20*21/2=210
+
+so (sum - 210)/0.1 is the answer
