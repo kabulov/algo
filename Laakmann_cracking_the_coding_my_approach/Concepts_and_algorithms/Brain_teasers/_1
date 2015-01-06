@@ -1,0 +1,15 @@
+
+SOLUTION
+
+enumerate bottles from 0 to 19
+for bottle 0<=i<=19:
+0: dont put one the scale
+1 through 9: take i pills from bottle
+10 through 18: take 1000 * (i - 9) pills from bottle
+19: take 10^6 pills from bottle
+
+if heavy bottle has index:
+0: the weight will be 1045045
+1 through 9: rational number, [int_part],[real_part], real part is i
+10 through 18: the sum will be 45(i-9)45
+19: the sum will be 1145045
