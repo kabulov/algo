@@ -1,0 +1,65 @@
+
+STATEMENT
+
+given a sorted (incresing order) array with unique integer elements, 
+write an algorithm to create binary search tree with minimal height
+
+SOLUTION
+
+questions:
+
+all  clear
+
+solution & analysis & design:
+
+the height of the minimal bin search tree with n nodes is (floor(log_2(n))+1)
+there will be a root, then we can prove that if we split other nodes 
+to sets of size a and b, then for tree to be minimal bin search tree
+abs(a-b) has to be <= 1
+
+proof : let sz = size of nodes without root, then minimal height of the tree is 
+min(max(floor(log_2(leftsize)) + 1 , floor(log_2(sz - leftsize)) + 1))
+where 0 <= leftsize <= sz; then min is where leftsize = max(floor(sz/2),sz-floor(sz/2));
+
+algorithm: pick middle element,
+smaller elems are left child, other elems are right child
+thus recursion, divide and conquer
+
+time complexity: O(n), n - amt of elems in the given array
+space complexity: O(n)
+
+code:
+
+#include <vector>
+using namespace std;
+
+struct Node {
+	int data;
+	Node *left, *right;
+	Node(int d):data(d),left(NULL),right(NULL){}
+};	
+
+Node* build(const vector<int>& v, int lt, int rt) {
+	if (lt >= rt) {
+		return NULL;
+	}
+	if(lt + 1 == rt) { //==
+		return new Node(v[lt]);
+	}
+	int mt = (lt + rt) / 2;
+	Node* node = new Node(v[mt]);
+	node->left = build(v, lt, mt);
+	node->right = build(v, mt + 1, rt);
+	return node;
+}
+
+Node* buildBST(const vector<int>& v, int size) {
+	if (size == 0) {
+		return NULL;
+	}
+	Node* ret = build(v, 0, size);
+	return ret;
+}
+
+mistakes & enhancements:
+
