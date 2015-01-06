@@ -1,0 +1,10 @@
+
+SOLUTION
+
+p(collide) = 1 - p(not collide)
+
+not collide iff all have same direction : clockwise or counterclockwise
+
+p(not collide) = 2 * (1/2)^n (as each chooses direction with probability 1/2)
+
+so the answer is 1 - (1/2)^(n-1)
