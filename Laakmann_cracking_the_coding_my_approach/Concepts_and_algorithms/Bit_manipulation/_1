@@ -1,0 +1,18 @@
+
+SOLUTION
+
+questions:
+
+insert means we have to clear position i through j in n and then insert m ?
+
+solution & analysis & design:
+
+lets do that straightforward:
+
+code:
+
+int mask = (~((1<<(j+1))-1)) | ((1<<i)-1);
+int result = (n & mask) | (m << i);
+
+mistakes & enhancements:
+
