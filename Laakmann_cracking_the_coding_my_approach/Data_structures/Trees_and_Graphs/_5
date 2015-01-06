@@ -48,3 +48,27 @@ bool isBST(Node* root) {
 }
 
 mistakes & enhancements:
+
+there is still another beautiful solution
+
+bool offer(Node* node, int mn, int mx) {
+	if (node == NULL) {
+		return true;
+	}
+	if (node->data <= mn || mx < node->data){ 
+		return false;
+	}
+	if (!offer(node->left, mn, node->data) || !offer(node->left, node->data, mx)) {
+		return false;
+	}
+	return true;
+}
+
+but it doesn work e.g. for this tree:
+5 is right child of 4,
+4 is left child of 5
+like: 
+root->data = 5;
+root->left->data = 4;
+root->left->right->data = 5;
+everything else is NULL;
