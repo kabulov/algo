@@ -16,3 +16,5 @@ int result = (n & mask) | (m << i);
 
 mistakes & enhancements:
 
+need testing, need maybe divide code into parts to make it easy to 
+test and maintain.
