@@ -1,0 +1,19 @@
+
+SOLUTION
+
+it was not about karatsuba`s, fast fourier transform algorithms
+
+one just had to remember that integers are a field and generator is 1
+
+we also have to ask whether we are allowed to compare numbers (suppose we can)
+
+so we have to implement operations:
+negate()
+abs()
+subtract()
+multiply()
+divide()
+
+divide code into parts to design and reuse, 
+ask questions to clarify, 
+dont make suppositions, ask
