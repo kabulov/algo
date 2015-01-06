@@ -40,6 +40,7 @@ int findMissing(const vector<int>& v) {
 }
 
 #include <iostream>
+#include <algorithm>
 
 int main () {
 
@@ -53,7 +54,7 @@ int main () {
 		}
 		numbers.push_back(i);
 	}
-
+	random_shuffle(numbers.begin(),numbers.end());
 	int found = findMissing(numbers);
 	cout << missing << " " << found << endl;
 	cout << boolalpha << (found == missing) << endl;
