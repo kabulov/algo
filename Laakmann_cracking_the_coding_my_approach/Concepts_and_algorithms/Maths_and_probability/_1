@@ -1,5 +1,9 @@
 
 SOLUTION
 
+solve p > p^2(3(1-p)+p)
 
-
+you get that
+play game 1 if p < 0.5
+play any game if p == 0.5 or p == 1.0
+play game 2 if 0.5 < p < 1.0
