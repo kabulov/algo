@@ -1,0 +1,13 @@
+
+SOLUTION
+
+quartet is hex number
+now (32bits):
+all bits in odd positions :  0xAAAAAAAA (8 A`s)
+all bits in even positions: 0x55555555 ( 8 5`s)
+
+so the result is 
+
+int swapoddeven(int n) {//32 bit int
+  return ((n & 0xaaaaaaaa) >> 1) | ((n & 0x55555555) << 1);
+}
