@@ -1,0 +1,9 @@
+
+SOLUTION
+
+colors of cells on opposite corners of the chess board have same color (depends on the parity of (i+j))
+so there are 30 cells of one color left, and 32 of other left, 
+but as each domino covers exactly one cell of each color,
+then the amount of covered cells of each color must be same
+but the amount of cells left is not equal , hence
+we cannot cover resulting board with 31 dominoes
