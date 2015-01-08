@@ -1,6 +1,19 @@
 
 SOLUTION
 
+partial:
+
+#include <cstdlib>
+
+int** alloc(int rows, int cols) {
+  int** chunk = (int**)malloc(rows * sizeof(int*));
+  for (int i = 0; i < rows; ++i) {
+    chunk[i] = (int*)malloc(cols * sizeof(int));
+  }  
+}
+
+full:
+
 #include <cstdlib>
 
 int ** alloc(int rows, int cols) {
@@ -11,7 +24,7 @@ int ** alloc(int rows, int cols) {
     return NULL;
   }
   int* offset = (int*)(space + rows);
-  for (int I = 0; I < rows; ++i) {
+  for (int i = 0; i < rows; ++i) {
     space[i] = offset + I * cols;
   }
   return space;
@@ -23,11 +36,3 @@ void dealloc(int** ptr, int rows){
 	}
 	free(ptr);
 }
-
-int** alloc(int rows, int cols) {
-  int** chunk = (int**)malloc(rows * sizeof(int*));
-  for (int I = 0; I < rows; ++i) {
-    chunk[i] = (int*)malloc(cols * sizeof(int));
-  }  
-}
-
