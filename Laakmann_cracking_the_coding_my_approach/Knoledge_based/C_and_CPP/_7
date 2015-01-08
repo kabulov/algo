@@ -4,3 +4,50 @@ SOLUTION
 code:
 
 if no cyclic depenencies:
+
+struct Node{
+	Node *fst, *scd;
+	Node(Node* f=NULL, Node* s=NULL):fst(f),scd(s){}
+};
+
+Node* copy_node(Node* n) {
+	if (n == NULL){
+		return NULL;
+	}
+	Node* ret = new Node(*n);
+	ret->fst = copy_node(n->fst);
+	ret->scd = copy_node(n->scd);
+	return ret;
+}
+
+if has cyclic dependencies:
+
+#include <map>
+using namespace std;
+
+struct Node {
+	Node* first, *second;
+};
+
+typedef map<Node*, Node*> Node_Map;
+
+Node* copy_helper(Node* other, Node_Map& node_map) {
+  if (other == NULL){
+    return NULL;
+  }
+  Node_Map::iterator it = node_map.find(other);
+  if (it != node_map.end()){
+    return it->second;
+  } 
+  Node* new_node = new Node(*other);
+  node_map[other] = new_node;
+  new_node->first = copy_helper(other->first, node_map);
+  new_node->second = copy_helper(other->second, node_map); 
+  return new_node;
+}
+
+Node* copy(Node* other) {
+  Node_Map node_map;
+  return copy_helper(other, node_map);
+}
+
