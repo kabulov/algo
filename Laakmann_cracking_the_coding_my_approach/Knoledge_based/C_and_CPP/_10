@@ -1,0 +1,33 @@
+
+SOLUTION
+
+#include <cstdlib>
+
+int ** alloc(int rows, int cols) {
+  int prefix_size = rows * sizeof(int*);
+  int matrix_size = rows * cols * sizeof(int);
+  int** space = (int**) malloc(prefix_size * matrix_size);
+  if (space == NULL) {
+    return NULL;
+  }
+  int* offset = (int*)(space + rows);
+  for (int I = 0; I < rows; ++i) {
+    space[i] = offset + I * cols;
+  }
+  return space;
+}
+
+void dealloc(int** ptr, int rows){ 
+	for (int i = 0; i < rows; ++i) {
+		free(ptr[i]);
+	}
+	free(ptr);
+}
+
+int** alloc(int rows, int cols) {
+  int** chunk = (int**)malloc(rows * sizeof(int*));
+  for (int I = 0; I < rows; ++i) {
+    chunk[i] = (int*)malloc(cols * sizeof(int));
+  }  
+}
+
