@@ -1,6 +1,8 @@
 
 SOLUTION
 
+1.
+
 #include <iostream> //istream
 #include <string> //getline, string
 #include <vector> //vector
@@ -27,5 +29,33 @@ vector<string> solver(istream& is, int k) {
     last_lines.shrink_to_fit();
   }
   return last_lines;
+}
+
+2.
+
+#include <iostream> //istream
+#include <string> //getline, string
+#include <vector> //vector
+#include <algorithm> //rotate
+#include <fstream>
+
+using namespace std;
+
+vector<string> solver(const string file_name, int k) {
+	std::ifstream ifs(file_name, std::ifstream::in);
+	vector<string> last_lines(k);
+	int pos = 0;
+	while (!ifs.eof()){			
+		getline(ifs, last_lines[pos % k]);
+		++pos;
+	}
+	if (pos >= k) {
+		pos %= k;
+		rotate(last_lines.begin(),last_lines.begin()+pos,last_lines.end());
+	}else{
+		last_lines.resize(pos);
+		last_lines.shrink_to_fit();
+	}
+	return last_lines;
 }
 
