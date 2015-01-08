@@ -23,6 +23,8 @@ vector<string> solver(istream& is, int k) {
   }
   if (last_lines.size() == k) 
     std::rotate(last_lines.begin(), last_lines.begin() + pos, last_lines.end());
+  } else {
+    last_lines.shrink_to_fit();
   }
   return last_lines;
 }
