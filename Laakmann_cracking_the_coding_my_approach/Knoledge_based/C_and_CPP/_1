@@ -21,7 +21,9 @@ vector<string> solver(istream& is, int k) {
     }
     pos = (pos + 1) % k; 
   }
-  std::rotate(last_lines.begin(), last_lines.begin() + pos, last_lines.end());
+  if (last_lines.size() == k) 
+    std::rotate(last_lines.begin(), last_lines.begin() + pos, last_lines.end());
+  }
   return last_lines;
 }
 
