@@ -1,0 +1,27 @@
+
+SOLUTION
+
+#include <iostream> //istream
+#include <string> //getline, string
+#include <vector> //vector
+#include <algorithm> //rotate
+
+using namespace std;
+
+vector<string> solver(istream& is, int k) {
+  vector<string> last_lines;
+  last_lines.reserve(k);
+  string buffer;
+  int pos = 0;
+  while (std::getline(is, buffer)) {
+    if (last_lines.size() < k) {
+      last_lines.push_back(buffer);
+    } else {
+      last_lines[pos] = buffer;
+    }
+    pos = (pos + 1) % k; 
+  }
+  std::rotate(last_lines.begin(), last_lines.begin() + pos, last_lines.end());
+  return last_lines;
+}
+
