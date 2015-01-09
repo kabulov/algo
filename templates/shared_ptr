@@ -1,0 +1,90 @@
+
+template<typename T>
+class SmartPtr{
+public:
+
+	T* get() const {
+		return ref;
+	}
+
+	//explicit SmartPtr(T* ptr):ref(ptr){}
+
+	template<typename U>
+	explicit SmartPtr(U* ptr):ref(ptr){
+		if (ptr == NULL) {
+			ref = NULL;
+			ref_count = NULL;
+		}else{
+			ref_count = new int(1);
+		}
+	}
+
+	//SmartPtr(const SmartPtr<T>& other) {}
+
+	template<typename U>
+	SmartPtr(const SmartPtr<U>& other) {
+		ref = other.ref;
+		ref_count = other.ref_count;
+		++(*ref_count);
+	}
+
+	//SmartPtr<T>& operator=(const SmartPtr<T>& other) {}
+
+	template<typename U>
+	SmartPtr<T>& operator=(SmartPtr<U>& other) {
+		if (this == &other) return *this;
+		//if (ref_count != NULL) { // ?
+		remove();
+		//}
+		ref = other.ref;
+		ref_count = other.ref_count;
+		if (ref_count == NULL){
+			ref_count = new int(1);
+		} else {
+			++(*ref_count);
+		}
+		return *this;
+	}
+
+	~SmartPtr() {
+		remove();
+	}
+
+	T& operator*() const {
+		return *ref;
+	}
+
+	T* operator->() const {
+		return ref;
+	}
+
+	template<typename U>
+	void reset(U* ptr) {
+		//if (ref_count != NULL) {why check, object never assumed to have default constructor without params, no dangling internal ptr
+		remove();
+		//}
+		ref = ptr;
+		if (ref_count == NULL) {
+			ref_count = new int(1);
+		} else {
+			++(*ref_count);
+		}
+	}
+
+protected:
+
+	void remove() {
+		--(*ref_count);
+		if (*ref_count == 0) {
+			delete ref_count;
+			delete ref; //usually delete performs assignment to NULL after deletion
+			ref_count = NULL;
+			ref = NULL;
+		}
+	}
+
+private:
+	int *ref_count;
+	T* ref;
+};
+
