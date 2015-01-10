@@ -2,7 +2,21 @@
 SOLUTION
 
 vector<char> v;
+int n;
 
 void gen(int pos, int open) {
-  
+  if (pos == n) {
+    //get ready sequence in v
+    return;
+  }  
+  if (open > 0) {
+    v[pos] = ')';
+    gen(pos + 1, open - 1);
+  }
+  if (pos + open + 1 < n) {
+    v[pos] = '(';
+    gen(pos + 1, open + 1);
+  }
 }
+
+call from outside: gen(0,0);
