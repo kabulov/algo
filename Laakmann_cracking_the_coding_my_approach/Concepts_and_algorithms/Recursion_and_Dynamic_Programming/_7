@@ -1,0 +1,22 @@
+
+SOLUTION
+
+//enum for colors ?
+
+int n, m;
+
+void fill(vector<vector<int> >& v, int i, int j, int old_c, int new_c) {
+  if (i<0 || i >= n || j < 0 || j >= m) return;
+  if (v[i][j] == old_c) {
+    v[i][j] = new_c;
+    fill(v, i - 1, j, old_c, new_c);
+    fill(v, i + 1, j, old_c, new_c);
+    fill(v, i, j - 1, old_c, new_c);
+    fill(v, i, j + 1, old_c, new_c);
+  }
+}
+
+void paint (vector<vector<int> >& v, int i, int j, int old_c, int new_c) {
+  if (v[i][j] == new_c) return;
+  fill(v, i, j, old_c, new_c);
+}
