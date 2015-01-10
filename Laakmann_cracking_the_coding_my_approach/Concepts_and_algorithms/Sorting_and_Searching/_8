@@ -1,0 +1,18 @@
+
+SOLUTION
+
+1.
+stupid O(N^2)
+2.
+sorted array : fast search, slow insert
+
+3.
+fenwick tree: if not more than N different numbers in input sequence,
+make use of fenwick tree with N elements, (use map to shrink numbers)
+
+4.
+binary search tree(balanced)
+
+code:
+
+
