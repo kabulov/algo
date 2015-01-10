@@ -19,4 +19,5 @@ void gen(int pos, int open) {
   }
 }
 
+if (n % 2 == 1) no solution
 call from outside: gen(0,0);
