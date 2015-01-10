@@ -1,0 +1,21 @@
+
+SOLUTION
+
+questions:
+
+1.
+is it random access file ? write read any place ?
+2.
+do we have extra 20 GB space ? any extra space ? can we split it up into several files
+3.
+sorted in new file ? same file ?
+4.
+what is the amount of expected disk operations per line ?
+5.
+what is the expected amount of lines ? len of strings ?
+
+code:
+
+huffman codes when merging ?
+
+external sort: sort chunks, then merge them
