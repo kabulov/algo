@@ -1,0 +1,341 @@
+
+Standard mazes lose their mystery as one grows older. But throw in some lasers, and suddenly you've got yourself a recipe for cross-generational appeal. The object in any maze is to find your way from your starting point to some goal. In a Laser Maze you must additionally contend with laser turrets.
+A laser turret is a stationary pillar that both blocks your movement and fires lasers from one side. Every time you take a step (either up, down, left, or right), every laser turret in the maze then rotates 90 degrees clockwise, and then shoots a momentary laser blast in the direction that it is facing. Needless to say, if you find yourself in the path of one of these lasers, you won't be around long enough to find a way out. A wall is a stationary pillar that blocks your movement, but does not fire lasers.
+Lasers are powerful, but they do not pass through walls or laser turrets. The laser turrets respond to your movements, so you can't stand still and wait for the turrets to turn. If you reach the goal, but are immediately shot by a laser, your efforts will have been in vain, so make sure you reach the goal safely.
+
+Input
+Input begins with an integer T, the number of mazes you'll explore. For each maze, there is first a line containing two integers, M and N, the height and width of the maze, respectively. The next M lines contain N characters each, describing the maze:
+. (empty space)
+# (wall)
+S (starting position)
+G (goal)
+< > ^ v (laser turrets)
+The four symbols for laser turrets signify turrets that are initially pointing left, right, up, or down respectively before you take your first step.
+
+Output
+For the ith maze, print a line containing "Case #i: " followed by the smallest number of steps necessary to get to the exit without being hit by a laser, or the string "impossible'' if there is no way to reach the goal safely.
+
+Constraints
+1 ≤ T ≤ 100
+1 ≤ M, N ≤ 100
+Each maze will contain exactly one 'S' and exactly one 'G'.
+
+Example input
+5
+2 5
+##^##
+S...G
+2 5
+##v##
+S...G
+1 5
+S..G<
+1 6
+S...G<
+5 5
+S....
+.....
+.>v..
+.^<..
+....G
+
+Example output
+Case #1: 6
+Case #2: 4
+Case #3: 3
+Case #4: impossible
+Case #5: 8
+
+Solution :
+
+solved using 4 layers of the initial maze(for each direction of turrets) and BFS
+
+the code below is obviously not the best solution of this problem,
+but tried to code it as quick as possible
+
+Language: C++
+
+#include <list>
+#include <deque>
+#include <queue>
+#include <cstdlib>
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <functional>
+#include <iomanip>
+#include <vector>
+#include <stack>
+#include <map>
+#include <set>
+#include <memory>
+#include <hash_map>
+#include <hash_set>
+#include <cmath>
+#include <string>
+#include <cctype>
+#include <iomanip>
+#include <sstream>
+#include <utility>
+#include <ctime>
+#include <bitset>
+#include <iterator>
+#include <numeric>
+#include <climits>
+
+using namespace std;
+
+#define FILE_READER freopen("input.txt", "r", stdin); freopen("output.txt", "w", stdout);
+#define FAST_READER ios::sync_with_stdio(false); cin.tie(NULL);
+
+const int maxn = 100;
+const int sentinel = 2;
+
+typedef vector<vector<char> > MAZE;
+
+MAZE maze;
+
+const char WALL = '#';
+const char EMPTY = '.';
+const char START = 'S';
+const char GOAL = 'G';
+const char DOWN = 'v';
+const char UP = '^';
+const char LEFT = '<';
+const char RIGHT = '>';
+
+bool is_arrow(char cell) {
+	return cell == UP || cell == DOWN || cell == LEFT || cell == RIGHT;	
+}
+
+bool is_wall(char cell) {
+	return cell == WALL;
+}
+
+char rotate (char direction) { //nothing happens if not an arrow
+	if (direction == UP) return RIGHT;
+	if (direction == RIGHT) return DOWN;
+	if (direction == DOWN) return LEFT;
+	if (direction == LEFT) return UP;
+	return direction; 
+}
+
+char rotate (char direction, int amt) {
+	while(amt --> 0) {
+		direction = rotate(direction);
+	}
+	return direction;
+}
+
+void rotate(const MAZE& from, MAZE& to, int m, int n, int amt) {
+	for (int i = 1; i <= m; ++i) {
+		for (int j = 1; j <= n; ++j ) {
+			to[i][j] = rotate(from[i][j], amt);
+		}
+	}
+}
+
+void build_wall(MAZE& maze, int m, int n) {
+	for(int i = 0; i <= m + 1; ++i) {
+		for (int j = 0; j <= n + 1; ++j) {
+			maze[i][j]=WALL;
+		}
+	}
+}
+
+vector<MAZE> mazes;
+const int mazes_amount = 4;
+
+void init(MAZE& maze){
+	maze.resize(maxn + sentinel, vector<char>(maxn + sentinel));
+}
+
+const int cell_amount = 100 * 100;
+vector<pair<int, int> > arrows(cell_amount);
+vector<pair<int, int> > endpoint(cell_amount);
+
+void blast_perform(MAZE& maze, int m, int n) {
+	//dp ?
+	int pos = 0;
+	for (int i = 1; i <= m; ++i) {
+		for (int j = 1; j <= n; ++j) {
+			if (is_arrow(maze[i][j])){
+				arrows[pos] = make_pair(i,j);
+				++pos;
+			}
+		}
+	}
+	int i, j;
+	for (int t = 0; t < pos; ++t) {
+		i = arrows[t].first;
+		j = arrows[t].second;
+		if (maze[i][j] == UP) {
+			while ((i-1)>0 && maze[i-1][j] != WALL && !is_arrow(maze[i-1][j])){ 
+				--i;
+			}
+		}
+		if (maze[i][j] == DOWN) {
+			while ((i+1)<=m && maze[i+1][j] != WALL && !is_arrow(maze[i+1][j])){ 
+				++i;
+			}
+		}
+		if (maze[i][j] == LEFT) {
+			while ((j-1)>0 && maze[i][j-1] != WALL && !is_arrow(maze[i][j-1])){ 
+				--j;
+			}
+		}
+		if (maze[i][j] == RIGHT) {
+			while ((j+1)<=n && maze[i][j+1] != WALL && !is_arrow(maze[i][j+1])){ 
+				++j;
+			}
+		}
+		endpoint[t]=make_pair(i,j);
+	}
+	for (int t = 0; t < pos; ++t) {
+		if (arrows[t].first == endpoint[t].first) {
+			i = arrows[t].first;
+			if (arrows[t].second > endpoint[t].second) {
+				swap(arrows[t].second, endpoint[t].second);
+			}
+			for (j=arrows[t].second; j <= endpoint[t].second; ++j) {
+				maze[i][j]=WALL;
+			}
+		}else{
+			j = arrows[t].second;
+			if (arrows[t].first > endpoint[t].first) {
+				swap(arrows[t].first, endpoint[t].first);
+			}
+			for (i = arrows[t].first; i <= endpoint[t].first; ++i) {
+				maze[i][j] = WALL;
+			}
+		}
+	}
+}
+
+void prn(int len, int test_case) {
+	cout << "Case #" << test_case << ": ";
+	if (len == -1) {
+		cout << "impossible";
+	}else{
+		cout << len;
+	}
+	cout << "\n";
+}
+
+typedef pair<pair<int, int>, pair<int, int> > que_type; //position (i,j), info (layer, path_len)
+que_type que_make_elem(int i, int j, int layer, int len) {
+	return make_pair(make_pair(i,j), make_pair(layer,len));
+}
+
+vector<vector<int> > path;
+
+int main() {
+
+  FILE_READER
+  //FAST_READER
+
+	path.resize(4, vector<int>(2));
+	path[0][0]=0, path[0][1]=1;
+	path[1][0]=0, path[1][1]=-1;
+	path[2][0]=1, path[2][1]=0;
+	path[3][0]=-1, path[3][1]=0;
+
+
+	init(maze);
+
+	mazes.resize(mazes_amount);
+	for (int i = 0; i < mazes_amount; ++i){
+		init(mazes[i]);
+	}
+
+	int t;
+	cin >> t;
+	int test_case = 0;
+
+	pair<int, int> start;
+	pair<int, int> goal;
+
+	const int que_len = 100 * 100 * 4;
+	int qleft, qright;
+	vector<que_type> que(que_len);
+	que_type cur;
+	que_type next;
+
+	while (t --> 0) {
+		int m, n;
+		cin >> m >> n;
+		build_wall(maze, m, n);
+
+		string s;
+		for (int i = 0; i < m; ++i) {
+			cin >> ws >> s;
+			for (int j = 0; j < n; ++j) {
+				maze[i+1][j+1]=s[j];
+			}	
+		}
+
+		for (int i = 0; i < mazes_amount; ++i) {
+			build_wall(mazes[i], m, n);
+			rotate(maze, mazes[i], m, n, i);
+			blast_perform(mazes[i], m, n);
+		}
+
+		int answer = -1;
+		test_case++;
+
+		for (int i = 1; i <= m; ++i) {
+			for (int j = 1; j <= n; ++j ){
+				if (maze[i][j] == START) {
+					start.first = i;
+					start.second = j;
+				}else
+				if (maze[i][j] == GOAL) {
+					goal.first = i;
+					goal.second = j;
+				}
+			}
+		}
+
+		qleft = 0;
+		qright = 1;
+		que[0] = que_make_elem(start.first, start.second, 0, 0); //layer = 0, len = 0
+		
+		//mazes[0][start.first][start.second] = WALL; 
+
+		while (qleft < qright) {
+			cur = que[qleft];
+			++qleft;
+
+			next = cur;
+			next.second.first++;
+			next.second.first %= mazes_amount;
+			next.second.second++;	
+
+			for (int t = 0; t < 4; ++t ){ 
+				next.first.first = cur.first.first + path[t][0];
+				next.first.second = cur.first.second + path[t][1];
+				char c = mazes[next.second.first][next.first.first][next.first.second];
+				if (c == WALL) {
+					continue;
+				}
+				if (c == GOAL) {
+					answer = next.second.second;
+					break;
+				}
+				//else E or S not arrow
+				mazes[next.second.first][next.first.first][next.first.second] = WALL;
+				que[qright] = next;
+				++qright;
+				//while(true);
+			}
+
+			if (answer != -1) break;
+		}
+
+		prn(answer, test_case);
+	}
+
+	return 0;
+}
+
+UPD: waiting for system test
