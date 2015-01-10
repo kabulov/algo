@@ -17,3 +17,4 @@ int find_pos(const vector<int>& v, int size) {
   }
   return lt; //then check outside to see if v[lt] == key
 }
+
