@@ -17,6 +17,10 @@ void gen(int pos) {
   }
 }
 
+call from outside as
+
+gen(0);
+
 but if there are equal elements 
 we will have to tweak the code above
 a little bit by adding a set
