@@ -1,0 +1,23 @@
+
+SOLUTION
+
+linear:
+
+start from point (0,col-1)
+
+bool search(const vector<vector<int> >& v, int key, int n, int m) {
+	int row = 0;
+	int col = m - 1;
+	while (row < n && col >= 0) {
+		if (v[row][col] == key) {
+			return true;
+		}
+		if (key < v[row][col]) {
+			--col;
+		}else{
+			++row;
+		}
+	}
+	return false;
+}
+
