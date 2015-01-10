@@ -1,0 +1,22 @@
+
+SOLUTION
+
+vector<int> v; //initial set
+int n; //size of v
+
+void gen(int pos) {
+  if (pos == n) {
+    //done:one more permutaion in v
+    return;
+  }
+  gen(pos+1);
+  for (int i = pos + 1; i < n; ++i) {
+    swap(v[pos],v[i]);
+    gen(pos+1);
+    swap(v[pos],v[i]);
+  }
+}
+
+but if there are equal elements 
+we will have to tweak the code above
+a little bit by adding a set
