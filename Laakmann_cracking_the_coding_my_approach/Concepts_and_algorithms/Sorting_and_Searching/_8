@@ -16,3 +16,69 @@ binary search tree(balanced)
 code:
 
 
+class Solution {
+public:
+	Solution():root(NULL){}
+	void put(int elem) {
+		if (root == NULL){
+			root = new Tree(elem);
+		} else {
+			root->insert(elem);
+		}
+	}
+	int get(int elem) {
+		if (root == NULL) return -1;
+		int ret = root->get(elem);
+		return ret;
+	}
+private:
+	Tree *root;
+};
+
+class Tree {
+public:
+	Tree(int elem)
+		:data(elem),
+		left_size(0),
+		left(NULL),
+		right(NULL)
+	{}
+
+	void insert(int elem) {
+		if (elem <= data) {
+			if (left == NULL) {
+				left = new Tree(elem);				
+			}else{
+				left->insert(elem);
+			}
+			left_size++;
+		}else{
+			if (right == NULL) {
+				right = new Tree(elem);
+			}else{
+				right->insert(elem);
+			}
+		}
+	}
+
+	int get(int elem) {
+		if (elem == data) {
+			return left_size;
+		}else
+		if (elem < data) {
+			if (left == NULL) return -1;
+			return left->get(elem);
+		}else{//>
+			if (right == NULL) return -1;
+			int result = right->get(elem);
+			if (result == -1) return -1;
+			return left_size + 1 + result;
+		}
+	}
+
+private:
+	int data;
+	int left_size;
+	Tree *left;
+	Tree *right;
+};
