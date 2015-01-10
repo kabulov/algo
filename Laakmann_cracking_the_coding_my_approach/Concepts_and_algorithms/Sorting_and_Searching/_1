@@ -1,0 +1,27 @@
+
+SOLUTION
+
+i usually put first half of the array in a separate array while implementing 
+merge of the mergesort. This happens because of the effort to build up
+the final array from the smallest elements. But if we try to build it up 
+from the biggest to smallest elements, then we would put the second
+half of the array to a separate array.
+
+void merge(int* a, int* b, int size_a, int size_b) {
+  int last_a = size_a - 1;
+  int last_b = size_b - 1;
+  int last_result = size_a + size_b - 1;
+  while (last_a >= 0 && last_b >= 0) {
+    if (a[last_a] > b[last_b]) {
+      a[last_result] = a[last_a];
+      --last_a;
+    }else{
+      a[last_result] = b[last_b];
+      --last_b;
+    }
+    --last_result;
+  }
+  while(last_b >= 0) {
+    a[last_result--] = b[last_b--];
+  }
+}
