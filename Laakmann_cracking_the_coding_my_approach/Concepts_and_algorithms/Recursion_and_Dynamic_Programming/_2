@@ -1,0 +1,7 @@
+
+SOLUTION
+
+so, dp[i][j] = dp[i-1][j]+dp[i][j-1];
+
+or either combinatorial, for no walls, 
+and combinatorial + inclusion exclusion if there exist walls  
