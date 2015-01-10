@@ -1,0 +1,12 @@
+
+SOLUTION
+
+int n;
+vector<int> v(n+1,0);
+vector<int> money = {1, 5, 10, 25};
+v[0]=1;
+for (int i = 0; i < money.size(); ++i) {
+  for (int j = n-money[i]; j >= 0; --j) {
+    v[j + money[i]] += v[j];
+  }
+}
