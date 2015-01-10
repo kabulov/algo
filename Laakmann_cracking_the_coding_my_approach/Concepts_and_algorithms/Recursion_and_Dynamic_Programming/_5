@@ -20,3 +20,12 @@ void gen(int pos) {
 but if there are equal elements 
 we will have to tweak the code above
 a little bit by adding a set
+
+#include <algorithm>
+
+string s;
+sort(s.begin(), s.end());
+
+do {
+  //do whatever you want with another permutation
+}while(next_permutation(s.begin(), s.end()));
