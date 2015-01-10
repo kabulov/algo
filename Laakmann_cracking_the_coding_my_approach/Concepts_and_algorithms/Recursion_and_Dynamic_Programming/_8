@@ -1,6 +1,8 @@
 
 SOLUTION
 
+dp, 
+
 int n;
 vector<int> v(n+1,0);
 vector<int> money = {1, 5, 10, 25};
@@ -10,3 +12,6 @@ for (int i = 0; i < money.size(); ++i) {
     v[j + money[i]] += v[j];
   }
 }
+
+or recursive,
+i amount of fst, and recurse, ..etc
