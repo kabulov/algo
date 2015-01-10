@@ -1,0 +1,19 @@
+
+SOLUTION
+
+it is like binary search
+suppose all numbers are distinct
+
+int find_pos(const vector<int>& v, int size) {
+  int lt, rt, mid;
+  lt = 0, rt = size;
+  while (lt + 1 < rt) {
+    mid = (lt + rt) / 2;
+    if (mid < v[mid]) {
+      rt = mid;
+    } else {
+      lt = mid;
+    }
+  }
+  return lt; //then check outside to see if v[lt] == key
+}
