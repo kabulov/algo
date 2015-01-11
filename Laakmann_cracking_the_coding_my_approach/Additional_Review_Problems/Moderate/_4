@@ -1,0 +1,37 @@
+
+SOLUTION
+
+int bits_amount = 32;
+
+int flip(int n) {
+  return n^1;
+}
+
+int sign(int n) {
+  return flip((n>>(bits_amount - 1))&1); //1 if n >= 0, else 0
+}
+
+int get_max_simple(int a, int b) {
+  int p = sign(a-b);
+  int q = flip(p);
+  return a * p + b * q;
+}
+
+but overflow problem, so
+
+//if a >= 0, b < 0 -> k = sign(a);
+//if a < 0, b >= 0 -> k = sign(a);
+//return_value = a * p + b * q anyway
+int get_max_full(int a, int b) {
+  int sa = sign(a);
+  int sb = sign(b);
+  int sc = sign(a-b);
+  
+  int use_sign_of_a = sa ^ sb;
+  int use_sign_of_c = flip(sa^sb);
+  
+  int p = use_sign_of_a * sa + use_sign_of_c * sc;
+  int q = flip(p);
+  
+  return a * p + b * q;
+}
