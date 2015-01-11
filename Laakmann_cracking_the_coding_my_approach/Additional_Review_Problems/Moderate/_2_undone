@@ -1,0 +1,15 @@
+
+SOLUTION
+
+questions:
+
+1.
+once or many queries
+
+2.
+nxn boeard ? or 3x3 board ?
+
+3.
+compactness vs speed vs clarity
+
+hash all rows into numbers, 3^9 boards
