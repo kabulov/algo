@@ -1,0 +1,15 @@
+
+SOLUTION
+
+void swap(int& a, int& b) {
+  a = a + b;
+  b = a - b;
+  a = a - b;
+}
+
+void swap(int* a, int* b) { //wont work if &a == &b
+  if (a == b) return;
+  *a = *a ^ *b;
+  *b = *a ^ *b;
+  *a = *a ^ *b;
+}
