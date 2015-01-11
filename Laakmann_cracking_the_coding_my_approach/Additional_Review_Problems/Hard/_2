@@ -1,0 +1,13 @@
+
+SOLUTION
+
+#include <random>
+
+void shuffle (vector<int>& v) {
+  default_random_engine generator;
+  for (int i = 0; i < v.size(); ++i) {
+    uniform_int_distribution<int> distribution(0,i);
+    int j = distribution(generator); //(0,i) inclusively
+    swap(v[i],v[j]);
+  }
+}
