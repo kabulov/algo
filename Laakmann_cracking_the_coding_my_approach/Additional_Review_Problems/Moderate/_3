@@ -1,0 +1,9 @@
+
+SOLUTION
+
+int five = 0;
+int n;//get n somehow
+while (n) {
+  five += n /= 5;
+}
+int ans = five;
