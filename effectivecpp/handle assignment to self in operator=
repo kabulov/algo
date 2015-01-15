@@ -32,7 +32,7 @@ unsafe operator=:
 
 outside& outside::operator=(const outside& param) {
   delete this->ins;
-  this->ins = new inside(param->ins);
+  this->ins = new inside(*param->ins);
   return *this;
 }
 
