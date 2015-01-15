@@ -7,3 +7,14 @@ int sumF (int a, int b) {
   int carry = (a & b) << 1;
   return sumF(sum, carry);
 }
+
+when we first hear this problem, obviously we should think of bits,
+because when there is no addition, what else can we make use of.
+
+another problem is complexity of this algorithm.
+suppose a = 111.111(x bits), b = 1;
+then we will have x + 1 steps, so we can say
+in more general case, complexity is (a-x bits, b - y bits) O(x+y);
+
+what about negatives one says ?
+the same bit arithmetics with negative numbers
