@@ -25,7 +25,7 @@ class inside {};
 class outside {
   //...
 private:
-  inside ins;
+  inside* ins;
 };
  
 unsafe operator=:
