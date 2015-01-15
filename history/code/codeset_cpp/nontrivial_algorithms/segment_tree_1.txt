@@ -1,0 +1,131 @@
+informatics.mccme.ru
+«адача є3328. ћаксимум на подотрезках с добавлением на отрезке
+
+ссылка
+http://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=3328&run_id=1739r2068#1
+
+условие
+ добавление на отрезке, максимум на отрезке
+
+решение
+ дерево отрезков
+
+код
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StreamTokenizer;
+import static java.lang.Math.max;
+
+public class Main {
+	public static void main(String[] args) throws IOException {
+		in = new StreamTokenizer(new FileReader("input.txt"));
+		out = new PrintWriter("output.txt");
+
+		int n = next();
+		int[] v = new int[n];
+		for (int i = 0; i < n; ++i) v[i] = next();
+		
+		tree tr = new tree(n);
+		tr.build(1, 0, n - 1, v);
+
+		String str;
+		int m = next();
+		for (int i = 0, l, r; i < m; ++i) {
+			in.nextToken();
+			str = in.sval;
+			l = next() - 1;
+			r = next() - 1;
+			if (str.charAt(0) == 'a') {
+				tr.upd(1, 0, n - 1, l, r, next());
+			} else {
+				out.print(tr.get(1, 0, n - 1, l, r) + " ");
+			}
+		}
+		
+		out.close();
+	}
+	
+	static int next() throws IOException {
+		in.nextToken();
+		return (int)in.nval;
+	}
+	
+	static PrintWriter out;
+	static StreamTokenizer in;
+}
+
+class tree {
+	int sz;
+	pair[] t;
+	
+	tree(int size) {
+		sz = size;
+		t = new pair[4 * sz];
+	}
+	
+	void build(int v, int lt, int rt, int[] src) {
+		if (lt == rt)
+			t[v] = new pair(src[lt], 0);
+		else {
+			int mt = (lt + rt) >>> 1;
+			build(v + v, lt, mt, src);
+			build(v + v + 1, mt + 1, rt, src);
+			t[v] = new pair(max(t[v + v].m, t[v + v + 1].m), 0);
+		}
+	}
+	
+	void push(int v) {
+		t[v + v].a += t[v].a;
+		t[v + v + 1].a += t[v].a;
+		t[v].a = 0;
+	}
+	
+	void upd(int v, int lt, int rt, int l, int r, int add) {
+		if (l == lt && r == rt)
+			t[v].a += add;
+		else {
+			push(v);
+			int mt = (lt + rt) >>> 1;
+			if (r <= mt)
+				upd(v + v, lt, mt, l, r, add);
+			else
+			if (mt + 1 <= l)
+				upd(v + v + 1, mt + 1, rt, l, r, add);
+			else {
+				upd(v + v, lt, mt, l, mt, add);
+				upd(v + v + 1, mt + 1, rt, mt + 1, r, add);
+			}
+			t[v].m = max(t[v + v].a + t[v + v].m, t[v + v + 1].a + t[v + v + 1].m);
+		}			
+	}
+	
+	long get(int v, int lt, int rt, int l, int r) {
+		if (l == lt && r == rt)
+			return t[v].a + t[v].m;
+		else {
+			push(v);
+			int mt = (lt + rt) >>> 1;
+			long ans;
+			if (r <= mt) 
+				ans = get(v + v, lt, mt, l, r);
+			else
+			if (mt + 1 <= l)
+				ans = get(v + v + 1, mt + 1, rt, l, r);
+			else 
+				ans = max(get(v + v, lt, mt, l, mt), get(v + v + 1, mt + 1, rt, mt +  1, r));
+			t[v].m = max(t[v + v].a + t[v + v].m, t[v + v + 1].a + t[v + v + 1].m);
+			return ans;
+		}
+	}
+}
+
+class pair {
+	long m, a;
+	
+	pair(long max, long add) {
+		m = max;
+		a = add;
+	}
+}

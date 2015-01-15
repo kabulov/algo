@@ -1,0 +1,86 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+const int maxn = 500000;
+vector<int> g[maxn];
+vector<int> q[maxn];
+vector<int> ord[maxn];
+int ans[maxn];
+
+int n = 0, m = 0;
+char word[4];
+
+int par[maxn];
+int anc[maxn];
+char used[maxn];
+
+int get(int v) {
+	return v == par[v] ? v : (par[v] = get(par[v]));
+}
+
+void unite(int a, int b, int p) {
+	a = get(a);
+	b = get(b);
+	if (rand() & 1) swap(a, b);
+	par[a] = b;
+	anc[b] = p;
+}
+
+void dfs(int v) {
+	par[v] = v;
+	anc[v] = v;
+	used[v] = 1;
+
+	for (int i = 0, mysz = g[v].size(); i < mysz; ++i) {
+		dfs(g[v][i]);
+		unite(v, g[v][i], v);
+	}
+
+	for (int i = 0, mysz = q[v].size(), to; i < mysz; ++i) {
+		to = q[v][i];
+		if (used[to]) 
+			ans[ord[v][i]] = anc[get(to)];		
+	}
+}
+
+int main() {
+	freopen("lca.in", "r", stdin);
+	freopen("lca.out", "w", stdout);
+
+	int k;
+	scanf("%d", &k);
+
+	for (int i = 0, a, b; i < k; ++i) {
+		scanf("%s", word);
+		scanf("%d %d", &a, &b);
+		--a;
+		--b;
+		if (word[0] == 'A') {
+			g[a].push_back(b);
+			++n;
+		} else {
+			q[a].push_back(b);
+			q[b].push_back(a);
+			ord[a].push_back(m);
+			ord[b].push_back(m);
+			++m;
+		}
+	}
+
+	for (int i = 0; i < n; ++i) used[i] = 0;
+
+	dfs(0);
+
+	for (int i = 0; i < m; ++i) {
+		printf("%d\n", ans[i] + 1);
+	}
+
+	return 0;
+}
+

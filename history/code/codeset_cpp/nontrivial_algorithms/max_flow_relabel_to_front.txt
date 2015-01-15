@@ -1,0 +1,179 @@
+informatics.mccme.ru
+Задача №2784. Максимальный поток - 2
+
+ссылка
+http://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=2784&run_id=1677r8838#1
+
+условие
+ найти макс поток, вершин до 500
+
+решение
+ алгоритм поднять в начало
+
+код
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StreamTokenizer;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+
+public class Main implements Runnable {
+	public static void main(String[] args) throws IOException {
+		new Thread(new Main()).start();
+	}
+	
+	StreamTokenizer in;
+	PrintWriter out;
+	
+	public void run() {
+		try {
+			in = new StreamTokenizer(new FileReader("input.txt"));
+			out = new PrintWriter("output.txt");
+			solve();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		} finally {
+			out.close();
+		}
+	}
+	
+	int next() throws IOException {
+		in.nextToken();
+		return (int)in.nval;
+	}
+	
+	public void solve() throws IOException {
+		readGraph();
+		initFlow();
+		initQue();
+		
+		while (que.size() > 0) {
+			discharge();
+		}
+		
+		out.println(e[t]);
+	}
+	
+	void push(int v, int to) {
+		int mn = (int)Math.min(e[v], (long)(c[v][to] - f[v][to]));
+		f[v][to] += mn;
+		f[to][v] -= mn;
+		e[to] += mn;
+		e[v] -= mn;
+	}
+	
+	void relabel(int v) {
+		int mn = -1;
+		for (int i = 0, sz = g[v].size(), to; i < sz; ++i) {
+			to = g[v].get(i);
+			if (c[v][to] > f[v][to]) {
+				if (mn == -1 || mn > h[to])
+					mn = h[to];
+			}
+		}
+		h[v] = 1 + mn;
+	}
+	
+	void discharge() {
+		int v = que.getFirst();
+		int mn = -1;
+		
+		for (int i = 0, sz = g[v].size(), to; i < sz && e[v] > 0; ++i) {
+			to = g[v].get(i);
+			if (c[v][to] > f[v][to]) {
+				if (h[v] == h[to] + 1) {
+					push(v, to);
+					if (used[to] == false && to != s && to != t) {
+						que.addLast(to);
+						used[to] = true;
+					}
+				} else 
+				if (mn == -1)
+					mn = h[to];
+				else
+					mn = Math.min(mn, h[to]);
+			}
+		}
+		
+		if (e[v] == 0) {
+			used[v] = false;
+			que.pollFirst();
+		} else {
+			h[v] = 1 + mn;
+		}
+	}
+	
+	void readGraph() throws IOException {
+		n = next();
+		m = next();
+		
+		g = new ArrayList[n];
+		for (int i = 0; i < n; ++i) g[i] = new ArrayList<Integer>();
+		f = new int[n][n];
+		c = new int[n][n];
+		
+		for (int i = 0; i < n; ++i)
+			for (int j = 0; j < n; ++j)
+				c[i][j] = f[i][j] = 0;
+		
+		for (int i = 0, a, b, C; i < m; ++i) {
+			a = next() - 1;
+			b = next() - 1;
+			C = next();
+			
+			g[a].add(b);
+			g[b].add(a);
+			c[a][b] = C;
+		}		
+	}
+	
+	void initFlow() throws IOException {		
+		s = 0;
+		t = n - 1;
+		
+		e = new long[n];
+		h = new int[n];
+		
+		for (int i = 0; i < n; ++i)
+			e[i] = h[i] = 0;
+		
+		h[s] = n;
+
+		for (int i = 0, sz = g[s].size(), to; i < sz; ++i) {
+			to = g[s].get(i);
+			f[s][to] = c[s][to];
+			f[to][s] = -c[s][to];
+			e[to] = c[s][to];
+			e[s] -= c[s][to];
+		}
+		
+	}
+	
+	void initQue() {
+		used = new boolean[n];
+		Arrays.fill(used, false);
+		
+		que = new ArrayDeque<Integer>();
+		for (int i = 0, sz = g[s].size(), to; i < sz; ++i) {
+			to = g[s].get(i);
+			if (to == t) continue;
+			que.addLast(to);
+			used[to] = true;
+		}		
+	}
+	
+	ArrayDeque<Integer> que;
+	boolean[] used;
+	
+	int n, m, s, t;
+	int[] h;
+	long[] e;
+	int[][] f, c;
+	ArrayList<Integer> g[];
+}
+

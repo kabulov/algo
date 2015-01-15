@@ -1,0 +1,237 @@
+#include "Container_3_3.h"
+
+// MEMORY
+class Memory_17: public Memory
+{
+protected:
+    void* allocMem(size_t sz) 
+	{ 
+		return malloc(sz);
+	}
+    void freeMem(void* ptr) 
+	{ 
+		::free(ptr); 
+	}
+};
+
+#define MAX_SIZE 256
+
+// CONTAINER   использую ХЭШ-Таблицы Коллизии разрешаются Методом цепочек
+// 
+template <class Key, class Elem> class Table_17: public Container_3_3<Elem>
+{
+protected:
+	void sort() { }
+	int setMaxSize(int newMaxSize) { throw ENotSupported(); }
+
+
+	void read(istream &s) {}
+	void write(ostream &s) {}
+
+	typedef struct TableEntry_ {
+		Key key;
+		Elem elem;
+		TableEntry_ *next;
+	} TableEntry;
+
+	TableEntry **table;
+
+	Container<Elem>& operator &= (Container<Elem> &c) { throw ENotSupported(); }
+	Elem& append(Elem& elem) { throw ENotSupported(); }
+
+	int getHash(Key &key);
+
+public:
+	
+	class Table_17_Iterator: public Iterator
+	{
+	public:
+		class NextNotFound{};
+		Table_17_Iterator(Table_17<Key, Elem>& owner): Iterator(owner), _owner(owner) 
+		{ 
+			n = -1;
+			list = NULL; 
+		}
+		int hasNext() {
+			if (list != NULL && list->next != NULL)
+				return 1;
+			for (int i = n+1; i < MAX_SIZE; i++)
+				if (_owner.table[i]!=NULL)
+					return 1;
+			return 0;
+		}
+		Elem& getNext() {
+			if (!hasNext())
+				throw  NextNotFound();
+			if (list != NULL && list->next != NULL){
+				list = list->next;
+				return list->elem;
+			}
+			else{
+				for (int i = n+1; i < MAX_SIZE; i++)
+					if (_owner.table[i]!=NULL){
+						n = i;
+						list = _owner.table[i];
+						return list->elem;
+					}
+			}
+			throw  NextNotFound();
+		}
+	protected:
+		Table_17<Key, Elem> &_owner;
+		typename Table_17<Key, Elem>::TableEntry *list;
+		int n;
+		friend class Table_17<Key, Elem>;
+	};
+	class ENotFound {};
+	Table_17(Memory &mem): Container_3_3<Elem>(mem) 
+	{ 
+		_maxSize = MAX_SIZE; 
+		table = (TableEntry**) ((mem.alloc(MAX_SIZE*sizeof(TableEntry*))).getPtr());
+		for (int i = 0; i < MAX_SIZE; i++) {
+			table[i] = NULL;
+		}
+	}
+	Table_17(Container<Elem> &c): Container_3_3<Elem>(c) 
+	{ 
+		_maxSize = MAX_SIZE; 
+		table = (TableEntry**) ((mem.alloc(MAX_SIZE*sizeof(TableEntry*))).getPtr());
+		for (int i = 0; i < MAX_SIZE; i++) {
+			table[i] = NULL;
+		}
+	}
+	~Table_17() { }
+	Iterator* newIterator() { return new Table_17_Iterator(*this); }
+	Elem& append(Key &key, Elem& elem);
+	void remove(Key &key);
+	int find(Key& key);
+	Elem& operator[](Key &key);
+	friend ostream& operator << (ostream &s, Table_17<Key, Elem>& c);
+    friend istream& operator >> (istream &s, Table_17<Key, Elem>& c);
+	friend class Iterator;
+};
+
+template <class Key, class Elem> void Table_17<Key, Elem>::remove(Key &key)
+{
+	if (find(key)) {
+		int hash = getHash(key);
+		TableEntry *prev, *list;
+
+		prev = list = table[hash];
+
+		if (list->next == NULL) {
+			table[hash] = NULL;
+			memory.free(list);
+		} else if (list->key == key) {
+			table[hash] = list->next;
+			memory.free(list);
+		} else {
+			while (list->next != NULL) {
+				list = list->next;
+				if (list->key == key) {
+					prev->next = list->next;
+					memory.free(list);
+					return;
+				}
+				prev = list;
+			}
+		}
+	}
+}
+
+template <class Key, class Elem> int Table_17<Key, Elem>::getHash(Key &key)
+{
+	return ((int)key)%MAX_SIZE;
+}
+
+template <class Key, class Elem> Elem& Table_17<Key, Elem>::operator[](Key &key)
+{
+	int hash = getHash(key);
+	if (table[hash] == NULL)
+		throw ENotFound();
+	else {
+		TableEntry *list = table[hash];
+		if (list->key == key)
+			return list->elem;
+		while (list->next != NULL) {
+			if (list->key == key)
+				return list->elem;
+			list = list->next;
+		}
+		throw ENotFound();
+	}
+}
+
+template <class Key, class Elem> int Table_17<Key, Elem>::find(Key &key)
+{
+	int hash = getHash(key);
+	if (table[hash] == NULL)
+		return 0;
+	else {
+		TableEntry *list = table[hash];
+		if (list->key == key)
+			return 1;
+		while (list->next != NULL) {
+			if (list->key == key)
+				return 1;
+			list = list->next;
+		}
+		return 0;
+	}
+}
+
+template <class Key, class Elem> Elem& Table_17<Key, Elem>::append(Key &key, Elem& elem)
+{
+	if (!find(key)) {
+		TableEntry *new_el = (TableEntry*) (memory.alloc(sizeof(TableEntry))).getPtr();
+		new_el->key = key;
+		new_el->elem = elem;
+		new_el->next = NULL;
+		
+		int hash = getHash(key);
+		TableEntry *list = table[hash];
+		
+		if (table[hash]==NULL)
+			table[hash] = new_el;
+		else {
+			while (list->next != NULL) {
+				list = list->next;
+			}
+			list->next = new_el;
+		}
+	}
+	return elem;
+}
+
+
+
+// TEST
+template <class Key, class Elem> class Test_17
+{
+protected:
+	Memory_17 m;
+	Table_17<Key, Elem> table;
+public:
+	Test_17<Key, Elem>(): table(m) { }
+	int test();
+};
+
+template <class Key, class Elem> int Test_17<Key, Elem>::test()
+{
+	int key=3, val=2;
+	table.append(key, val);
+	key=4; val=5;
+	table.append(key, val);
+	key=0; val=7;
+	table.append(key, val);
+	/*key = 3;
+	table.remove(key);
+	key = 4;
+	table.remove(key);*/
+
+	for(Container<Elem>::Iterator * i = table.newIterator(); 	i->hasNext();){
+		cout << i->getNext()<< endl;
+
+	}
+	return 0;
+}

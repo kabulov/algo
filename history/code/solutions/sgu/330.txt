@@ -1,0 +1,48 @@
+import java.io.IOException;
+import java.util.Scanner;
+
+
+public class Solution {
+	public static void main(String[] argv) throws IOException {
+		Scanner in = new Scanner(System.in);
+		
+		long a = in.nextLong(), b = in.nextLong();
+		long[] vect = new long[500];
+		int len = 0;
+		
+		long da = div(a), db = div(b);
+		if (da == a || db == b) {
+			System.out.println("Impossible");
+			return;
+		}
+		
+		vect[len++] = a;
+		if (da != 2) vect[len++] = a += da;
+		
+		long lastb = b;
+		if (db != 2) b -= db;
+		
+		if (a > b) {
+			System.out.println("Impossible");
+			return;
+		}
+		
+		while (a < b) {
+			long mid = 2;
+			while (a % (mid * 2) == 0 && a + mid * 2 <= b && mid * 2 < a) mid *= 2;
+			vect[len++] = a += mid;
+		}
+		
+		if (a != lastb) vect[len++] = lastb;
+		
+		for (int i = 0; i < len; ++i) 
+			System.out.println(vect[i]);
+	}
+	
+	static long div(long n) {
+		for (long d = 2; d * d <= n; ++d) 
+			if (n % d == 0)
+				return d;			
+		return n;
+	}
+}

@@ -1,0 +1,48 @@
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+	public static void main(String[] args) throws IOException {
+		Scanner in = new Scanner(new File("input.txt"));
+		PrintWriter out = new  PrintWriter("output.txt");
+
+		int n = in.nextInt();
+		int k = in.nextInt();
+		
+		int len = 0;
+		int[] prime = new int[k];
+		int[] deg = new int[k];
+		int[] amt = new int[k];
+		
+		for (int i = 2; i * i <= k; ++i)
+			if (k % i == 0) {
+				deg[len] = 0;
+				while (k % i == 0) {
+					k /= i;
+					deg[len]++;
+				}
+				prime[len++] = i;
+			}
+		
+		if (k > 1) {
+			prime[len++] = k;
+			deg[len - 1] = 1;
+		}
+		
+		for (int i = 0; i < len; ++i) {
+			int tmp = n;
+			amt[i] = 0;
+			while (tmp > 0) {
+				amt[i] += tmp /= prime[i];
+			}
+		}
+		
+		int ans = Integer.MAX_VALUE;
+		for (int i = 0; i < len; ++i) ans = Math.min(ans, amt[i] / deg[i]);
+		out.println(ans);
+		out.close();
+	}
+}

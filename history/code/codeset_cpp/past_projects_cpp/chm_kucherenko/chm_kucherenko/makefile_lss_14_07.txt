@@ -1,0 +1,8 @@
+lss: main_lss_14_07.o lss_14_07.o
+	gcc -x c -o lss main_lss_14_07.c lss_14_07.c -lm
+
+main_lss_14_07.o: main_lss_14_07.c
+	gcc -x c -c main_lss_14_07.c -lm
+
+lss_14_07.o: lss_14_07.c
+	gcc -x c -c lss_14_07.c -lm

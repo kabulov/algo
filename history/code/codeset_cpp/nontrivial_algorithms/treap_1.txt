@@ -1,0 +1,247 @@
+informatics.mccme.ru
+Задача №2789. Своппер
+
+сылка
+
+http://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=2789&run_id=1677r10754#1
+
+условие
+ запросы : помеять местами элементы на четных и нечетных местах в подотрезке массива 
+ запросы : сумма на отрезке
+
+решение
+ четные и нечетные позиции поддерживаем 2 дерамидами по неяному ключу 
+
+код
+
+#include <stdio.h>
+#include <stdlib.h>
+
+using namespace std;
+
+struct treap {
+	int n, sz;
+	long long s;
+	treap *left, *right;
+	treap(int num, treap *lt = NULL, treap *rt = NULL):n(num), sz(1), s(num), left(lt), right(rt) {}
+};
+
+typedef treap* pitem;
+
+int sizeOf(pitem t) {
+	return t == NULL ? 0 : t->sz;
+}
+
+long long sumOf(pitem t) {
+	return t == NULL ? 0 : t->s;
+}
+
+void recalc(pitem t) {
+	if (t == NULL) return;
+	t->sz = 1 + sizeOf(t->left) + sizeOf(t->right);
+	t->s = t->n + sumOf(t->left) + sumOf(t->right);
+}
+
+int random(int base) {
+	return rand() % base;
+}
+
+pitem Merge(pitem L, pitem R) {
+	if (L == NULL) return R;
+	if (R == NULL) return L;
+
+	if (random(L->sz + R->sz) < L->sz) {
+		L->right = Merge(L->right, R);
+		recalc(L);
+		return L;
+	} else {
+		R->left = Merge(L, R->left);
+		recalc(R);
+		return R;
+	}
+}
+
+void split(pitem t, pitem &L, pitem &R, int x) {
+	if (t == NULL) {
+		L = R = NULL;
+		return;
+	}
+
+	int curInd = 1 + sizeOf(t->left);
+
+	if (curInd <= x) {
+		if (t->right == NULL)
+			R = NULL;
+		else
+			split(t->right, t->right, R, x - curInd);
+		recalc(t);
+		L = t;
+	} else {
+		if (t->left == NULL)
+			L = NULL;
+		else
+			split(t->left, L, t->left, x);
+		recalc(t);
+		R = t;
+	}
+}
+
+pitem build(int lt, int rt, int* src) {
+	if (lt > rt) return NULL;
+
+	if (lt == rt) {
+		return new treap(src[lt]);
+	}
+
+	int mt = (lt + rt) >> 1;
+	return Merge(build(lt, mt, src), build(mt + 1, rt, src));
+}
+
+int getPos(int i) {
+	return (i>>1)+(i&1);
+}
+
+pitem todd, teven;
+
+void Swapper(int lt, int rt) {
+	int l0, r0, l1, r1;
+
+	if (lt & 1) {
+		l0 = getPos(lt + 1);
+		r0 = getPos(rt);
+		l1 = getPos(lt);
+		r1 = getPos(rt - 1);
+	} else {
+		l0 = getPos(lt);
+		r0 = getPos(rt - 1);
+		l1 = getPos(lt + 1);
+		r1 = getPos(rt);
+	}
+
+	pitem a0, b0, c0, a1, b1, c1;
+
+	split(teven, a0, b0, l0 - 1);
+	split(b0, b0, c0, r0 - l0 + 1);
+
+	split(todd, a1, b1, l1 - 1);
+	split(b1, b1, c1, r1 - l1 + 1);
+
+	teven = Merge(a0, Merge(b1, c0));
+	todd = Merge(a1, Merge(b0, c1));
+}
+
+long long sumIn(int lt, int rt) {
+	if (lt == rt) {
+		long long ans;
+		pitem a, b, c;
+		if (lt & 1) {
+			split(todd, a, b, getPos(lt) - 1);
+			split(b, b, c, 1);
+			ans = sumOf(b);
+			todd = Merge(a, Merge(b, c));
+			return ans;
+		} else {
+			split(teven, a, b, getPos(lt) - 1);
+			split(b, b, c, 1);
+			ans = sumOf(b);
+			teven = Merge(a, Merge(b, c));
+			return ans;
+		}
+	} else {
+		int l0, r0, l1, r1;
+
+		if ((lt & 1) == 0 && (rt & 1) == 0) {
+			l0 = getPos(lt);
+			r0 = getPos(rt);
+			l1 = getPos(lt + 1);
+			r1 = getPos(rt - 1);
+		} else
+		if ((lt & 1) == 0 && (rt & 1) == 1) {
+			l0 = getPos(lt);
+			r0 = getPos(rt - 1);
+			l1 = getPos(lt + 1);
+			r1 = getPos(rt);
+		} else
+		if ((lt & 1) == 1 && (rt & 1) == 0) {
+			l0 = getPos(lt + 1);
+			r0 = getPos(rt);
+			l1 = getPos(lt);
+			r1 = getPos(rt - 1);
+		} else
+		if ((lt & 1) == 1 && (rt & 1) == 1) {
+			l0 = getPos(lt + 1);
+			r0 = getPos(rt - 1);
+			l1 = getPos(lt);
+			r1 = getPos(rt);
+		}
+
+		pitem a0, b0, c0, a1, b1, c1;
+		
+		split(teven, a0, b0, l0 - 1);
+		split(b0, b0, c0, r0 - l0 + 1);
+		
+		split(todd, a1, b1, l1 - 1);
+		split(b1, b1, c1, r1 - l1 + 1);
+
+		long long ans = sumOf(b0) + sumOf(b1);
+
+		teven = Merge(a0, Merge(b0, c0));
+		todd = Merge(a1, Merge(b1, c1));
+
+		return ans;
+	}
+}
+
+void clear(pitem t) {
+	if (t == NULL) return;
+	clear(t->left);
+	clear(t->right);
+	delete t;
+}
+
+int n, m, osz, esz;
+int odd[100000 + 10], even[100000 + 10];
+
+int main() {
+	freopen("input.txt", "r", stdin);
+	freopen("output.txt", "w", stdout);
+
+	int test = 0;
+
+	while (true) {
+		scanf("%d %d", &n, &m);
+		if (n == 0 && m == 0) break;
+		++test;
+		if (test > 1) printf("\n");
+		printf("Swapper %d:\n", test);
+
+		osz = esz = 0;
+		
+		for (int i = 1; i <= n; ++i) {
+			if (i & 1) {
+				scanf("%d", &odd[osz++]);
+			} else {
+				scanf("%d", &even[esz++]);
+			}
+		}
+
+		todd = build(0, osz - 1, odd);
+		teven = build(0, esz - 1, even);
+
+		for (int i = 0; i < m; ++i) {
+			int op, lt, rt;
+			scanf("%d %d %d", &op, &lt, &rt);
+
+			if (op == 1) {
+				Swapper(lt, rt);
+			} else {
+				printf("%lld\n", sumIn(lt, rt));
+			}
+		}
+
+		clear(todd);
+		clear(teven);
+	}
+
+	return 0;
+}

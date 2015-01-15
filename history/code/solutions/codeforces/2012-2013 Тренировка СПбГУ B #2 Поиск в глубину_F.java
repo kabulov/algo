@@ -1,0 +1,170 @@
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StreamTokenizer;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class Solution implements Runnable {
+	public static void main(String[] argv) {
+		new Thread(new Solution()).start();
+	}
+	
+	StreamTokenizer in;
+	PrintWriter out;
+	
+	String FileName = "condense2";
+	
+	public void run() {
+		try {
+			in = new StreamTokenizer(new FileReader(FileName + ".in"));
+			out = new PrintWriter(FileName + ".out");
+//			in = new StreamTokenizer(new FileReader("in.txt"));
+//			out = new PrintWriter("out.txt");
+			solve();			
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		} finally {
+			out.close();
+		}
+	}
+	
+	int next() throws IOException {
+		in.nextToken();
+		return (int)in.nval;
+	}
+	
+	void solve() throws IOException {
+		n = next();
+		m = next();
+		
+		siz = 0;
+		v = new edge[m];
+		for (int i = 0, f, s; i < m; ++i) {
+			f = next() - 1;
+			s = next() - 1;
+			if (f == s) continue;
+			v[siz++] = new edge(f, s);
+		}
+		
+		m = siz;
+		Arrays.sort(v, 0, m);		
+		siz = Math.min(m, 1);
+		for (int i = 1; i < m; ++i) 
+			if (!v[i].equal(v[i - 1])) 
+				v[siz++] = v[i];			
+		m = siz;
+
+		g = new ArrayList[n];
+		for (int i = 0; i < n; ++i) g[i] = new ArrayList<Integer>();
+		gt = new ArrayList[n];
+		for (int i = 0; i < n; ++i) gt[i] = new ArrayList<Integer>();
+		
+		for (int i = 0, f, s; i < m; ++i) {
+			f = v[i].f;
+			s = v[i].s;
+			g[f].add(s);
+			gt[s].add(f);
+		}
+		
+		used = new boolean[n];
+		Arrays.fill(used, false);
+		
+		siz = 0;
+		order = new int[n];
+		
+		for (int i = 0; i < n; ++i) 
+			if (!used[i])
+				tsort(i);
+				
+		col = new int[n];
+		Arrays.fill(col, -1);
+		
+		siz = 0;		
+		for (int i = 0, v; i < n; ++i) {
+			v = order[n - 1 - i];
+			if (col[v] == -1) 
+				dfs(v, siz++);			
+		}		
+		
+		Arrays.fill(used, false);
+		amt = 0;		
+		ans = new edge[m];
+		
+		for (int i = 0; i < n; ++i)
+			if (!used[i])
+				last(i);
+		
+		Arrays.sort(ans, 0, amt);
+		siz = Math.min(amt, 1);
+		for (int i = 1; i < amt; ++i) 
+			if (!ans[i].equal(ans[i - 1]))
+				++siz;
+		
+		out.println(siz);
+	}
+	
+	edge[] ans;
+	int amt;
+	
+	void last(int v) {
+		used[v] = true;
+		for (int i = 0, sz = g[v].size(), to; i < sz; ++i) {
+			to = g[v].get(i);
+			if (col[v] != col[to])
+				ans[amt++] = new edge(col[v], col[to]);
+			if (!used[to])
+				last(to);
+		}
+	}
+	
+	void dfs(int v, int c) {
+		col[v] = c;
+		for (int i = 0, sz = gt[v].size(), to; i < sz; ++i) {
+			to = gt[v].get(i);
+			if (col[to] == -1) 
+				dfs(to, c);			
+		}
+	}
+	
+	int[] col;
+	
+	void tsort(int v) {
+		used[v] = true;
+		for (int i = 0, sz = g[v].size(), to; i < sz; ++i) {
+			to = g[v].get(i);
+			if (!used[to])
+				tsort(to);
+		}
+		order[siz++] = v;
+	}
+	
+	int[] order;
+	boolean[] used;
+	
+	ArrayList<Integer> gt[];
+	ArrayList<Integer> g[];
+	
+	edge[] v;
+	int n, m, siz;
+}
+
+class edge implements Comparable <edge> {
+	int f, s;
+	
+	edge(int fst, int scd) {
+		f = fst;
+		s = scd;
+	}
+
+	public int compareTo(edge arg) {
+		if (f == arg.f) return s - arg.s; 
+		return f - arg.f;
+	}
+	
+	public boolean equal(edge arg) {
+		return f == arg.f && s == arg.s;
+	}
+}

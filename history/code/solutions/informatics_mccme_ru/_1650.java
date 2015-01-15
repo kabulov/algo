@@ -1,0 +1,166 @@
+
+import static java.lang.Math.min;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main implements Runnable {
+	public static void main(String[] args) throws IOException {
+		new Thread(new Main()).start();
+	}
+	
+	Scanner in;
+	PrintWriter out;
+	
+	public void run() {
+		try {
+			in = new Scanner(new File("input.txt"));
+			out = new PrintWriter("output.txt");
+			solve();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		} finally {
+			out.close();
+		}
+	}
+	
+	public void solve() throws IOException {
+		n = in.nextInt();
+		m = in.nextInt();
+		w = in.nextInt();
+		b = in.nextInt();
+		h = in.nextInt();
+		
+		inp = new char[n][m];
+		for (int i = 0; i < n; ++i) {
+			inp[i] = in.next().toCharArray();
+		}
+		
+		nsiz = n * m + 2;
+		g = new ArrayList[nsiz];
+		for (int i = 0; i < nsiz; ++i) g[i] = new ArrayList<Integer>();
+		elist = new edge[2 * n * m + 2 * 4 * n * m];
+		
+		init();
+		
+		q = new int[nsiz];
+		d = new int[nsiz];
+		ptr = new int[nsiz];
+		
+		int flow = 0, push;
+		
+		while (true) {
+			if (!bfs()) break;
+			Arrays.fill(ptr, 0);
+			while (true) {
+				push = dfs(s, inf);
+				if (push == 0) break;
+				flow += push;
+			}
+		}
+		
+		out.println(flow);
+	}
+	
+	int dfs(int v, int flow) {
+		if (flow == 0) return 0;
+		if (v == t) return flow;
+		int id, to, push;
+		for (; ptr[v] < g[v].size(); ++ptr[v]) {
+			id = g[v].get(ptr[v]);
+			to = elist[id].b;
+			if (d[to] != d[v] + 1) continue;
+			push = dfs(to, min(flow, elist[id].c - elist[id].f));
+			if (push > 0) {
+				elist[id].f += push;
+				elist[id ^ 1].f -= push;
+				return push;
+			}
+		}
+		return 0;
+	}
+	
+	boolean bfs() {
+		Arrays.fill(d, -1);
+		d[s] = 0;
+		q[0] = s;
+		int lt = 0, rt = 1;
+		int id, to, v;
+		while (lt < rt) {
+			v = q[lt++];
+			for (int i = 0; i < g[v].size(); ++i) {
+				id = g[v].get(i);
+				to = elist[id].b;
+				if (d[to] == -1 && elist[id].f < elist[id].c) {
+					q[rt++] = to;
+					d[to] = d[v] + 1;
+				}
+			}
+		}
+		return d[t] != -1;
+	}
+	
+	int inf = (int)1e8;
+	int[] q, d, ptr;
+
+	void init() {
+		esiz = 0;
+		s = 0;
+		t = nsiz - 1;
+		
+		for (int i = 0; i < n; ++i) 
+			for (int j = 0; j < m; ++j) {
+				if (inp[i][j] == 'W') {		//WB or wb
+					add(s, i * m + j + 1, b, 0);
+				} else {
+					add(i * m + j + 1, t, w, 0);
+				}
+				
+				for (int k = 0, ito, jto; k < 4; ++k) {//adding each edge twice !!!!!!
+					ito = i + side[k][0];
+					jto = j + side[k][1];
+					if (!good(ito, jto)) continue;
+					add(i * m + j + 1, ito * m + jto + 1, h, 0);	//capba is 0 !!
+				}
+			}
+	}
+	
+	int[][] side = {
+		{0, 1},
+		{0, -1},
+		{1, 0},
+		{-1, 0}
+	};
+	
+	boolean good(int i, int j) {
+		return 0 <= i && i < n && 0 <= j && j < m;
+	}
+	
+	void add(int a, int b, int capab, int capba) {
+		g[a].add(esiz);
+		elist[esiz++] = new edge(a, b, capab);
+		g[b].add(esiz);
+		elist[esiz++] = new edge(b, a, capba);
+	}
+	
+	int s, t, nsiz, esiz;
+	edge[] elist;
+	ArrayList<Integer> g[];
+	
+	char[][] inp;
+	int n, m, w, b, h;
+}
+
+class edge {
+	int a, b, f, c;
+	edge(int fst, int scd, int cap) {
+		a = fst;
+		b = scd;
+		f = 0;
+		c = cap;
+	}
+}

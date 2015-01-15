@@ -1,0 +1,8 @@
+#include "Container.h"
+
+template<class Elem> class Container_3_3: public Container<Elem> 
+{
+public:
+	Container_3_3(Memory &mem): Container<Elem>(mem) { }
+	Container_3_3(Container<Elem> &c): Container<Elem>(c) { }
+};

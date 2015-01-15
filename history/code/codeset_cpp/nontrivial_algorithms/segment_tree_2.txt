@@ -1,0 +1,98 @@
+informatics.mccme.ru
+«адача є752. RMQ
+
+ссылка
+http://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=752&run_id=142r2339
+
+условие
+ максимум и его позици€ в массиве
+
+решение 
+ дерево отрезков
+
+код
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StreamTokenizer;
+
+
+public class Main {
+	public static void main(String[] args) throws IOException {
+		in = new StreamTokenizer(new FileReader("input.txt"));
+		out = new PrintWriter("output.txt");
+	
+		int n = next();
+		int[] v = new int[n];
+		for (int i = 0; i < n; ++i) v[i] = next();
+		
+		tree tr = new tree(n);
+		tr.build(1, 0, n - 1, v);
+		
+		int m = next();
+		pair ans;
+		
+		for (int i = 0; i < m; ++i) {
+			ans = tr.get(1, 0, n - 1, next() - 1, next() - 1);
+			out.println(ans.max + " " + (ans.pos + 1));
+		}
+		
+		out.close();
+	}
+	
+	static int next() throws IOException {
+		in.nextToken();
+		return (int)in.nval;
+	}
+	
+	static PrintWriter out;
+	static StreamTokenizer in;
+}
+
+class tree {
+	int sz;
+	pair[] t;
+	
+	tree(int size) {
+		sz = size;
+		t = new pair[4 * sz];
+	}
+	
+	pair combine(pair a, pair b) {
+		if (a.max > b.max) return new pair(a.max, a.pos);
+		return new pair(b.max, b.pos);
+	}
+	
+	void build(int v, int lt, int rt, int[] src) {
+		if (lt == rt) 
+			t[v] = new pair(src[lt], lt);
+		else {
+			int mt = (lt + rt) >>> 1;
+			build(v + v, lt, mt, src);
+			build(v + v + 1, mt + 1, rt, src);
+			t[v] = combine(t[v + v], t[v + v + 1]);
+		}
+	}
+	
+	pair get(int v, int lt, int rt, int l, int r) {
+		if (l == lt && r == rt) 
+			return t[v];
+		else {
+			int mt = (lt + rt) >>> 1;
+			if (r <= mt) return get(v + v, lt, mt, l, r);
+			if (mt + 1 <= l) return get(v + v + 1, mt + 1, rt, l, r);
+			return combine(get(v + v, lt, mt, l, mt), get(v + v + 1, mt + 1, rt, mt + 1, r));
+		}
+	}
+}
+
+class pair {
+	int max, pos;
+	
+	pair(int m, int p) {
+		max = m;
+		pos = p;
+	}
+}
+

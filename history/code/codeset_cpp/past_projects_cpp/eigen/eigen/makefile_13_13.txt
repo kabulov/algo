@@ -1,0 +1,48 @@
+
+# Common macro
+
+CC              = bcc32
+LINK            = bcc32
+
+DEBUG           =
+OPTIMIZE        = -O2
+WARNINGS        =
+INCLUDE_DIR     =
+CFLAGS          = -c $(DEBUG) $(OPTIMIZE) $(WARNINGS) $(INCLUDE_DIR)
+
+LIB_DIR         =
+LIB             =
+LDFLAGS         = $(DEBUG)
+
+
+# Compilation suffix rule
+
+.SUFFIXES: .c .obj
+
+.c.obj:
+	$(CC) $(CFLAGS) $<
+
+
+# Output name and objective list
+
+NAME            = evc.exe
+OBJS            = main_13_13.obj sim_13_13.obj evc_13_13.obj
+
+
+# Dependency lines
+
+all: $(NAME)
+
+$(NAME): $(OBJS)
+	$(LINK) $(LDFLAGS) $(LIB_DIR) $(LIB) -e$(NAME) $(OBJS)
+
+main_13_13.obj: main_13_13.c task_13_13.h
+
+sim_13_13.obj: sim_13_13.c task_13_13.h
+
+evc_13_13.obj: evc_13_13.c task_13_13.h
+
+clean:
+	rm -f $(OBJS) *.?~
+	rm -f *.tds
+

@@ -1,0 +1,156 @@
+informatics.mccme.ru
+Задача №111240. Переворот
+
+ссылка
+
+http://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=111240&run_id=1677r10716#1
+
+условие
+ запросы : переворот подотрезка массива
+ запросы : минимум на отрезке
+
+решение
+ дерамида по неявному ключу
+
+код
+
+#include <iostream>
+
+using namespace std;
+
+const int inf = (int)1e9 + 10;
+
+struct treap {
+	int sz, mn, m;
+	bool rev;
+	treap *left, *right;
+	treap(int dt, treap *lt = NULL, treap *rt = NULL) : m(dt), mn(dt), sz(1), left(lt), right(rt), rev(false){}
+};
+
+typedef struct treap* pitem;
+
+int sizeOf(pitem t) {
+	return t == NULL ? 0 : t->sz;
+}
+
+int minOf(pitem t) {
+	return t == NULL ? inf : t->mn;
+}
+
+void recalc(pitem t) {
+	if (t == NULL) return;
+	t->sz = 1 + sizeOf(t->left) + sizeOf(t->right);
+	t->mn = min(t->m, min(minOf(t->left), minOf(t->right)));
+}
+
+void push(pitem t) {
+	if (t == NULL) return;
+	if (t->rev == false) return;
+	
+	pitem tmp = t->left;
+	t->left = t->right;
+	t->right = tmp;
+
+	if (t->right != NULL) t->right->rev ^= 1;
+	if (t->left != NULL) t->left->rev ^= 1;
+
+	t->rev = false;
+}
+
+void split(pitem t, pitem& L, pitem& R, int x) {
+	push(t);
+
+	if (t == NULL) {
+		L = R = NULL;
+		return;
+	}
+
+	int curInd = 1 + sizeOf(t->left);
+	
+	if (curInd <= x) {
+		if (t->right == NULL)
+			R = NULL;
+		else
+			split(t->right, t->right, R, x - curInd);
+		recalc(t);
+		L = t;
+	} else {
+		if (t->left == NULL)
+			L = NULL;
+		else
+			split(t->left, L, t->left, x);
+		recalc(t);
+		R = t;
+	}
+}
+
+int random(int base) {
+	return rand() % base;
+}
+
+pitem Merge(pitem L, pitem R) {
+	push(L);
+	push(R);
+
+	if (L == NULL) return R;
+	if (R == NULL) return L;
+
+	if (random(L->sz + R->sz) < L->sz) {
+		L->right = Merge(L->right, R);
+		recalc(L);
+		return L;
+	} else {
+		R->left = Merge(L, R->left);
+		recalc(R);
+		return R;
+	}
+}
+
+pitem build(int lt, int rt, int* src) {
+	if (lt == rt)
+		return new treap(src[lt]);
+	int mt = (lt + rt) >> 1;
+	return Merge(build(lt, mt, src), build(mt + 1, rt, src));
+}
+
+
+pitem Reverse(pitem t, int lt, int rt) {
+	pitem a, b, c;
+	split(t, a, b, lt - 1);
+	split(b, b, c, rt - lt + 1);
+	b->rev = true;
+	return Merge(a, Merge(b, c));
+}
+
+int getMin(pitem& t, int lt, int rt) {
+	pitem a, b, c;
+	split(t, a, b, lt - 1);
+	split(b, b, c, rt - lt + 1);
+	int ans = minOf(b);
+	t = Merge(a, Merge(b, c));
+	return ans;
+}
+
+int n, m;
+int v[100000 + 10];
+
+int main()  {
+	freopen("input.txt", "r", stdin);
+	freopen("output.txt", "w", stdout);
+
+	cin >> n >> m;
+	for (int i = 0; i < n; ++i) scanf("%d", &v[i]);
+
+	pitem t = build(0, n - 1, v);
+	for (int i = 0; i < m; ++i) {
+		int tp, l, r;
+		scanf("%d %d %d", &tp, &l, &r);
+		if (tp == 1) {
+			t = Reverse(t, l, r);
+		} else {
+			printf("%d\n", getMin(t, l, r));
+		}
+	}
+
+	return 0;
+}

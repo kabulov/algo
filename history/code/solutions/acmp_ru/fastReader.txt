@@ -1,0 +1,55 @@
+class Input {
+	byte[] buffer;
+	int bufpos;
+	int bufsize;
+	
+	int number;
+	
+	byte c;
+	
+	FileInputStream in;
+	
+	Input(final String name, int bufsiz) throws IOException {
+		in = new FileInputStream(new File(name)); 
+		
+		buffer = new byte[bufsiz];
+		bufsize = in.read(buffer);
+		
+		bufpos = 0;
+		c = buffer[0];
+	}
+	
+	int nextInt() throws IOException {
+		number = 0;
+		boolean neg = false;
+		
+		while (!('0' <= c && c <= '9')) {
+			if (c == '-') neg = true;
+			
+			++bufpos;
+			if (bufpos >= bufsize) {
+				bufsize = in.read(buffer);
+				bufpos = 0;
+			}
+			c = buffer[bufpos];
+		}
+		
+		do {
+			number = number * 10 + c - 48;
+			++bufpos;
+			if (bufpos >= bufsize) {
+				if ((bufsize = in.read(buffer)) <= 0)
+					break;
+				bufpos = 0;
+			}
+			c = buffer[bufpos];
+		} while ('0' <= c && c <= '9');
+		
+		if (neg) return -number;
+		return number;
+	}
+}
+
+//...
+//Input in = new Input("input.txt", 2 * 1024);
+//...

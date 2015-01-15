@@ -1,0 +1,130 @@
+informatics.mccme.ru
+«адача є2790. Range Minimum Query
+
+ссылка
+http://informatics.mccme.ru/moodle/mod/statements/view3.php?chapterid=2790&run_id=1677r10714#1
+
+условие
+ вставка числа в любое место массива
+ запрос на минимум на отрезке
+
+решение
+ дерамида по не€вному ключу
+
+код
+
+#include <stdio.h>
+#include <iostream>
+#include <stdlib.h>
+
+using namespace std;
+
+const int inf = (int)1e9 + 10;
+
+struct treap {
+	int mn, sz, m;
+	treap *left, *right;
+	treap(int arg, treap *lt = NULL, treap* rt = NULL): m(arg), mn(arg), left(lt), right(rt), sz(1) {}
+};
+
+typedef treap* pitem;
+
+int sizeOf(pitem t) {
+	return t == NULL ? 0 : t->sz;
+}
+
+int minOf(pitem t) {
+	return t == NULL ? inf : t->mn;
+}
+
+void recalc(pitem& t) {
+	if (t == NULL) return;
+	t->sz = sizeOf(t->left) + sizeOf(t->right) + 1;
+	t->mn = min(t->m, min(minOf(t->left), minOf(t->right)));
+}
+
+void split(pitem t, pitem& L, pitem& R, int x) {
+	if (t == NULL) {
+		L = R = NULL;
+		return;
+	}
+
+	int curInd = 1 + sizeOf(t->left);
+	pitem mid = NULL;
+
+	if (curInd <= x) {
+		if (t->right == NULL)
+			R = NULL;
+		else
+			split(t->right, t->right, R, x - curInd);
+		recalc(t);
+		L = t;
+	} else {
+		if (t->left == NULL)
+			L = NULL;
+		else
+			split(t->left, L, t->left, x);
+		recalc(t);
+		R = t;
+	}
+}
+
+int random(int base) {
+	return rand() % base;
+}
+	
+pitem Merge(pitem L, pitem R) {
+	if (L == NULL) return R;
+	if (R == NULL) return L;
+
+	pitem ans = NULL;
+
+	if (random(L->sz + R->sz) < L->sz) {
+		L->right = Merge(L->right, R);
+		recalc(L);
+		return L;
+	} else {
+		R->left = Merge(L, R->left);
+		recalc(R);
+		return R;
+	}
+}
+
+pitem Add(pitem t, int pos, int num) {
+	pitem a, b;
+	split(t, a, b, pos);
+	return Merge(a, Merge(new treap(num) , b));
+}
+
+int getMin(pitem& t, int l, int r) {
+	pitem a, b, c;
+	split(t, a, b, l - 1);
+	split(b, b, c, r - l + 1);
+	int ans = minOf(b);
+	t = Merge(a, Merge(b, c));
+	return ans;
+}
+
+int n;
+char v[5];
+
+int main() {
+
+	freopen("input.txt", "r", stdin);
+	freopen("output.txt", "w", stdout);
+
+	pitem t = NULL;
+
+	cin >> n;
+	for (int i = 0; i < n; ++i) {
+		scanf("%s", v);
+		int a, b;
+		scanf("%d %d", &a, &b);
+		if (v[0] == '+') {
+			t = Add(t, a, b);
+		} else {
+			printf("%d\n", getMin(t, a, b));
+		}
+	}
+
+}

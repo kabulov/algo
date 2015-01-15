@@ -1,0 +1,61 @@
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+	public static void main(String[] args) throws IOException {
+		Scanner in = new Scanner(new File("input.txt"));
+		PrintWriter out = new  PrintWriter("output.txt");
+
+		int m = in.nextInt();
+		int n = in.nextInt();
+		
+		size = Math.min(m, n);
+		len = Math.max(m, n);
+		
+		init();
+		
+		cur = new long[1 << size];
+		prev = new long[1 << size];
+		
+		Arrays.fill(cur, 1);
+		
+		for (int k = 1; k < len; ++k) {
+			tmp = prev;
+			prev = cur;
+			cur = tmp;
+			for (int i = 0; i < 1 << size; ++i) {
+				cur[i] = 0;
+				for (int j = 0; j < 1 << size; ++j)
+					cur[i] += koef[j][i] * prev[j];
+			}
+		}
+		
+		long ans = 0;
+		for (int i = 0; i < 1 << size; ++i) ans += cur[i];
+		out.println(ans);
+		out.close();
+	}
+	
+	static void init() {
+		koef = new long[1 << size][1 << size];
+		
+		for (int i = 0; i < 1 << size; ++i) 
+			for (int j = i; j < 1 << size; ++j)
+				koef[i][j] = koef[j][i] = offer(i, j) ? 1 : 0;
+	}
+	
+	static boolean offer(int f, int s) {
+		for (int i = 1; i < size; ++i)
+			if (((f >> i) & 1) == ((f >> (i - 1)) & 1) && ((s >> i) & 1) == ((s >> (i - 1)) & 1) && ((f >> i) & 1) == ((s >> i) & 1)) 
+				return false;
+		
+		return true;
+	}
+	
+	static long[] cur, prev, tmp;
+	static long[][] koef;
+	static int size, len;
+}

@@ -1,0 +1,103 @@
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StreamTokenizer;
+import java.util.Arrays;
+import java.util.HashMap;
+
+
+public class Solution {
+	public static void main(String[] argv) throws IOException {
+		in = new StreamTokenizer(new InputStreamReader(System.in));
+		
+		n = nextInt();
+		Edge[] e = new Edge[n];
+		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+		for (int i = 0, j = 0; i < n; ++i) {
+			e[i] = new Edge(nextInt(), nextInt(), nextInt(), nextInt(), i);
+			if (map.get(e[i].a) == null)
+				map.put(e[i].a, j++);
+			if (map.get(e[i].b) == null)
+				map.put(e[i].b, j++);
+		}
+
+		for (int i = 0; i < n; ++i) {
+			e[i].a = map.get(e[i].a);
+			e[i].b = map.get(e[i].b);
+		}
+			
+		Arrays.sort(e);
+		long cost = 0;
+		
+		set st = new set(map.size());
+		
+		int a, b;
+		for (int i = 0; i < n; ++i) {
+			a = st.get(e[i].a);
+			b = st.get(e[i].b);
+			if (a != b) {
+				cost += e[i].p;
+				st.union(a, b);
+			}
+		}
+		
+		System.out.println(cost);		
+		for (int i = n - 1; i >= 0; --i) {
+			System.out.print(e[i].ind + 1);
+			System.out.print(" ");
+		}
+	}
+	
+	static int n;	
+	
+	static StreamTokenizer in;
+	static int nextInt() throws IOException {
+		in.nextToken();
+		return (int)in.nval;
+	}
+}
+
+class set {
+	int sz;
+	int[] rank, par;
+	
+	set(int size) {
+		sz = size;
+		rank = new int[sz];
+		par = new int[sz];
+		
+		for (int i = 0; i < sz; ++i) {
+			par[i] = i;
+			rank[i] = 1;
+		}
+	}
+	
+	void union(int a, int b) {
+		if (rank[a] < rank[b])
+			par[a] = b;
+		else {
+			if (rank[a] == rank[b]) ++rank[a];
+			par[b] = a;
+		}
+	}
+	
+	int get(int a) {
+		if (a == par[a]) return a;
+		return par[a] = get(par[a]);
+	}
+}
+
+class Edge implements Comparable<Edge> {
+	int a, b, r, p, ind;
+	Edge(int aa, int bb, int rr, int pp, int i) {
+		a = aa;
+		b = bb;
+		r = rr;
+		p = pp;
+		ind = i;
+	}
+
+	public int compareTo(Edge arg) {
+		if (r == arg.r) return arg.p - p;
+		return arg.r - r;
+	}
+}

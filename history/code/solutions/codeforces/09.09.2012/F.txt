@@ -1,0 +1,87 @@
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+	public static void main(String[] args) throws IOException {
+		Scanner in = new Scanner(new File("input.txt"));
+		PrintWriter out = new  PrintWriter("output.txt");
+
+		int n = in.nextInt();
+		char[] name = in.next().toCharArray();
+		
+		if (name.length == 0) { // ?
+			out.println("YES");
+		} else 
+		if (n < name.length) {
+			out.println("NO");
+		} else {
+			int k = name.length;			
+			int[] ans = new int[k];
+			solver sol = new solver(in, n, name, k);
+			if (sol.solve(ans) < k)
+				out.println("NO");
+			else {
+				out.println("YES");
+				for (int i = 0; i < k; ++i) 
+					out.print((ans[i] + 1) + " ");
+			}
+		}
+		
+		out.close();
+	}
+}
+
+class solver {
+
+	int n, k;
+	boolean[] used;
+	int[] len;
+	int[][] g;
+	int[] vect;
+	
+	solver(Scanner in, int n, char[] name, int k) {
+		this.k = k;
+		this.n = n;
+		len = new int[n];
+		Arrays.fill(len, 0);
+		g = new int[n][k];
+		vect = new int[k];
+		used = new boolean[n];
+		String buf;
+		for (int i = 0; i < n; ++i) {
+			buf = in.next();
+			for (int j = 0; j < k; ++j)
+				if (buf.indexOf(name[j]) >= 0) { 
+					g[i][len[i]] = j;
+					len[i]++;
+				}
+		}
+	}
+	
+	int solve(int[] ans) {
+		int answer = 0;
+		Arrays.fill(vect, -1);
+		for (int i = 0; i < n && answer < k; ++i) {
+			Arrays.fill(used, false);
+			if (kun(i)) ++answer;
+		}
+		for (int i = 0; i < k; ++i) ans[i] = vect[i];
+		return answer;
+	}
+	
+	private boolean kun(int v) {
+		if (used[v]) return false;
+		used[v] = true;
+		for (int i = 0; i < len[v]; ++i) {
+			int to = g[v][i];
+			if (vect[to] == -1 || kun(vect[to])) {
+				vect[to] = v;
+				return true;
+			}
+		}
+		return false;
+	}
+}
