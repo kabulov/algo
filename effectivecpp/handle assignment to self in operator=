@@ -23,7 +23,7 @@ now lets try some code
  
 class inside {};
 class outside {
-  //...
+  outside& operator=(const outside& other);
 private:
   inside* ins;
 };
@@ -32,7 +32,7 @@ unsafe operator=:
 
 outside& outside::operator=(const outside& param) {
   delete this->ins;
-  this->ins = new inside(*param->ins);
+  this->ins = new inside(*param.ins);
   return *this;
 }
 
@@ -48,7 +48,7 @@ it is often better to aim exception safety first because it eliminates assignmen
 
   outside& outside::operator=(const outside& param) {
     inside *ptr = this->ins;
-    this->ins = new inside(param->ins);
+    this->ins = new inside(*param.ins);
     delete ptr;
     
     return *this;
