@@ -41,3 +41,12 @@ const Int Int::operator++(int) {
 	++(*this);
 	return oldVal;
 }
+
+//never overload || or &&
+//never overload ,
+//http://stackoverflow.com/questions/1485983/calling-c-class-methods-via-a-function-pointer
+
+cannot overload
+1. all 4 casts
+2. new, delete, sizeof, typeid
+3. ., .*, ::, ?:
