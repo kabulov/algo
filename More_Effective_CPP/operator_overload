@@ -19,3 +19,14 @@ public:
 };
 
 //proxy class, to prevent more than one user defined implicit conversion ^
+
+class Int {
+public:
+	Int& operator++();
+	const Int operator++(int);
+	
+	Int& operator--();
+	const Int operator--(int);
+	
+	Int& operator+=(const Int& other);
+};
