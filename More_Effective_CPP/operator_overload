@@ -1,0 +1,21 @@
+
+class Rational {
+public:
+  operator double() const {}
+};
+
+//also implicit constructors ^
+
+class Array {
+public:
+	class ArraySize {
+	public:
+		ArraySize(int sz):size_(sz) {}
+		int size() const {return size_;};
+	private:
+		int size_;
+	};
+	explicit Array(ArraySize s) {}
+};
+
+//proxy class, to prevent more than one user defined implicit conversion ^
