@@ -28,5 +28,16 @@ public:
 	Int& operator--();
 	const Int operator--(int);
 	
-	Int& operator+=(const Int& other);
+	Int& operator+=(const Int& other); //or just int to add 1 
 };
+
+Int& Int::operator++() {
+	(*this) += 1; // = *this + 1
+	return *this;
+}
+
+const Int Int::operator++(int) {
+	const Int oldVal = *this;
+	++(*this);
+	return oldVal;
+}
