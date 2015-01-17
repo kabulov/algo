@@ -63,13 +63,11 @@ void prn(int amt, int testcase) {
 
 void solve() { //words are nonempty
 	int t;
-	cin >> t;
-	//scanf("%d7", &t);
+	scanf("%d", &t);
 	int n;
 	int testcase = 0;
 	while (t --> 0) {
-		//scanf("%d", &n);
-		cin >> n;
+		scanf("%d", &n);
 		vsize = 1;
 		memset(v, 0, sizeof(v));
 		amount = 0;
