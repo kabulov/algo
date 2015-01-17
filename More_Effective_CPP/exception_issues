@@ -1,0 +1,37 @@
+
+if in a destructor and another exception is active (not caught by stack unwinding mechanism and catch clause) 
+then throwing a new destructor may cause terminate (usually abort).
+
+set_terminate;//<exception>
+abort; //<cstdlib>
+uncaught_exception; //<exception>
+raise; //<csignal>
+atexit;//<cstdlib>
+
+when an exception is thrown, copy constructor is called,
+so the copy of an object is passed to catch clause,
+moreover, it is static copy, slicing problem
+
+exception is a temporary object
+
+catch(widget&) is allowed, although exception is a temporary object(unlike function parameters)
+
+in general, no type conversions will take place when catching an exception, e.g.
+catch(double) will not catch throw int
+but there are two kinds of type conversions that are applied when matching exceptions to catch clauses
+1. a catch clause for base class is allowed to handle exceptions of derived(public) classes too
+exception hierarchy:
+  1 exception
+  2.1 logic_error 2.2 runtime_error
+  3.1 (derived from 2.1) domain_error, length_error,out_of_range,invalid_argument  
+  3.2 (derived from 2.2) range_error, overflow_error, underflow_error
+2.the second type of allowed conversions is from a typed to untyped pointer, so
+a catch clause taking const void* pointer will catch an exception of any pointer type
+catch(const void*)...
+
+
+another difference between passing a parameter and propagating an exception is that catch clauses
+are always tried in the order of appearance
+
+
+
