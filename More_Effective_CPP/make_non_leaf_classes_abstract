@@ -1,0 +1,62 @@
+
+class animal {
+public:
+	animal& operator=(const animal&) {}
+};
+
+class leftchild : public animal {
+public:
+	leftchild& operator=(const leftchild&) {}
+};
+
+class rightchild : public animal {
+public:
+	rightchild& operator=(const rightchild&){}
+};
+
+int main () {
+
+	leftchild anim1;
+	rightchild anim2;
+	animal* an1 = &anim1;
+	animal* an2 = &anim2;
+	*an1=*an2;
+
+	return 0;
+}
+
+make third abstract class with proected assignment operator
+no geterogeneous assignments are allowed now
+
+
+class abstract_animal {
+protected:
+	abstract_animal& operator=(const abstract_animal&) {}
+public:
+	virtual ~abstract_animal()=0;
+};
+abstract_animal::~abstract_animal(){}
+
+class animal : public abstract_animal {
+public:
+	animal& operator=(const animal&) {}
+	//~animal(){}
+};
+
+class left_child : public abstract_animal {
+public:
+	left_child& operator=(const left_child&){}
+	~left_child(){}
+};
+
+class right_child : public abstract_animal {
+public:
+	right_child& operator=(const right_child&){}
+	~right_child(){}
+};
+
+int main () {
+	animal a; //default destructor
+
+	return 0;
+}
