@@ -1,0 +1,91 @@
+
+// ConsoleApplication1.cpp: определяет точку входа для консольного приложения.
+//
+
+#include "stdafx.h"
+
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	return 0;
+}
+
+#include <list>
+#include <deque>
+#include <queue>
+#include <cstdlib>
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <functional>
+#include <iomanip>
+#include <vector>
+#include <stack>
+#include <map>
+#include <set>
+#include <memory>
+#include <cmath>
+#include <string>
+#include <cctype>
+#include <iomanip>
+#include <sstream>
+#include <utility>
+#include <ctime>
+#include <bitset>
+#include <iterator>
+#include <numeric>
+#include <climits>
+
+using namespace std;
+
+#define FILE_READER freopen("input.txt", "r", stdin); freopen("output.txt", "w", stdout);
+#define FAST_READER ios::sync_with_stdio(false); cin.tie(NULL);
+
+const int maxn = (int)1e7;
+
+int v[maxn + 123456] = { 0 };
+
+void prec() {
+	for (int i = 2; i <= maxn; ++i) {
+		if (v[i] == 0) {
+			for (int j = i; j <= maxn; j += i) {
+				++v[j];
+			}
+		}
+	}
+}
+
+void prn(int number, int testcase) {
+	cout << "Case #" << testcase << ": " << number << "\n";
+}
+
+void solve() {
+	prec();
+	int t;
+	cin >> t;
+	int a, b, k;
+	int testcase = 0;
+	int amount = 0;
+	while (t --> 0) {
+		cin >> a >> b >> k;
+		++testcase;
+		amount = 0;
+		for (int i = a; i <= b; ++i) {
+			if (v[i] == k) {
+				++amount;
+			}
+		}
+		prn(amount, testcase);
+	}
+}
+
+int main() {
+
+	FILE_READER
+	FAST_READER
+
+	solve();
+
+	return 0;
+}
+
