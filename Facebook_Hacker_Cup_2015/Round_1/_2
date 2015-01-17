@@ -1,0 +1,97 @@
+
+i had a problem with MSVS, so i couldnt send it
+although i downloaded the file (((
+
+#include <list>
+#include <deque>
+#include <queue>
+#include <cstdlib>
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <functional>
+#include <iomanip>
+#include <vector>
+#include <stack>
+#include <map>
+#include <set>
+#include <memory>
+#include <cmath>
+#include <string>
+#include <cctype>
+#include <iomanip>
+#include <sstream>
+#include <utility>
+#include <ctime>
+#include <bitset>
+#include <iterator>
+#include <numeric>
+#include <climits>
+
+using namespace std;
+
+#define FILE_READER freopen("input.txt", "r", stdin); freopen("output.txt", "w", stdout);
+#define FAST_READER ios::sync_with_stdio(false); cin.tie(NULL);
+
+const int sentinel = 12;
+const int maxn = (int)1e6;
+const int chset = 26;
+
+char s[maxn + sentinel];
+char v[maxn + sentinel][chset];
+int vsize;
+int amount;
+int slen;
+int one;
+
+void add(int spos, int vpos) {
+	while (spos < slen) {
+		amount += one;
+		char c = s[spos] - 'a';
+		if (v[vpos][c] == 0) {
+			v[vpos][c] = vsize;
+			++vsize;
+			one = 0;
+		}
+		vpos = v[vpos][c];
+		++spos;
+	}
+}
+
+void prn(int amt, int testcase) {
+	printf("Case #%d: %d\n", testcase, amt);
+}
+
+void solve() { //words are nonempty
+	int t;
+	cin >> t;
+	//scanf("%d7", &t);
+	int n;
+	int testcase = 0;
+	while (t --> 0) {
+		//scanf("%d", &n);
+		cin >> n;
+		vsize = 1;
+		memset(v, 0, sizeof(v));
+		amount = 0;
+		while (n--> 0) {
+			scanf("%s", s);
+			slen = strlen(s);
+			one = 1;
+			add(0, 0);
+		}
+		++testcase;
+		prn(amount, testcase);
+	}
+}
+
+int main() {
+
+	FILE_READER
+		//  FAST_READER
+
+		solve();
+
+	return 0;
+}
+
