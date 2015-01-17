@@ -1,0 +1,125 @@
+
+#include <list>
+#include <deque>
+#include <queue>
+#include <cstdlib>
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <functional>
+#include <iomanip>
+#include <vector>
+#include <stack>
+#include <map>
+#include <set>
+#include <memory>
+#include <hash_map>
+#include <hash_set>
+#include <cmath>
+#include <string>
+#include <cctype>
+#include <iomanip>
+#include <sstream>
+#include <utility>
+#include <ctime>
+#include <bitset>
+#include <iterator>
+#include <numeric>
+#include <climits>
+
+using namespace std;
+
+#define FILE_READER freopen("input.txt", "r", stdin); freopen("output.txt", "w", stdout);
+#define FAST_READER ios::sync_with_stdio(false); cin.tie(NULL);
+
+long long mod = (long long)1e9 + 7LL;
+
+long long mul_mod(long long a, long long b) {
+	return (a * b) % mod;
+}
+
+long long pow_mod(long long base, long long power) {
+	long long ret = 1;
+	while (power) {
+		if (power&1LL) ret = mul_mod(ret, base);
+		base = mul_mod(base, base);
+		power /= 2LL;
+	}
+	return ret;
+}
+
+long long inv_mod(long long num) {
+	return pow_mod(num, mod-2LL);
+}
+
+void prn(int test_case, long long lt, long long rt) {
+	cout << "Case #" << test_case << ": " << lt << " " << rt << "\n";
+}
+
+long long mx(long long y, long long x) {
+	if (x == 0) {
+		return 1LL;
+	}
+	--y;
+	long long ret = 1LL;
+	for (long long i = 2; i <= x; ++i) {
+		ret = mul_mod(ret, y + i);
+		ret = mul_mod(ret, inv_mod(i));
+	}
+	ret = mul_mod(ret, y+1LL-x);
+	return ret;
+}
+
+long long mn(long long y, long long x) {
+	if (x == 0) {
+		return 1LL;
+	}
+	long long ret = 1LL;
+	for (long long i = 2; i <= x; ++i) {
+		ret = mul_mod(ret, x + i);
+		ret = mul_mod(ret, inv_mod(i));
+	}
+	return ret;
+}
+
+void getyx(const string& s, long long &y, long long &x) {
+	y = x = 0;
+	int i = 0;
+	while (s[i] != '-') {
+		y = y * 10LL + (s[i] - '0');
+		++i;
+	}
+	++i;
+	while (i < s.size()) {
+		x = x * 10LL + (s[i] - '0');
+		++i;
+	}
+}
+
+void solve() { //words are nonempty
+	int t;
+	cin >> t;
+	long long y, x;
+	long long lt, rt;
+	int test_case = 0;
+	string s;
+	while (t --> 0) {
+		cin >> ws >> s;
+		getyx(s,y,x);
+		lt = mx(y, x);
+		rt = mn(y, x);
+		++test_case;
+		prn(test_case, lt, rt);
+	}
+}
+
+int main() {
+
+  FILE_READER
+//  FAST_READER
+
+	solve();	
+
+	return 0;
+}
+
