@@ -9,6 +9,7 @@ raise; //<csignal>
 atexit;//<cstdlib>
 
 when an exception is thrown, copy constructor is called,
+(even for a local static object)
 so the copy of an object is passed to catch clause,
 moreover, it is static copy, slicing problem
 
