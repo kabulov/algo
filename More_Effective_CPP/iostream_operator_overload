@@ -1,0 +1,32 @@
+
+#include <iostream>
+#include <complex>
+
+using namespace std;
+	
+class some {
+public:
+	//friend ostream& operator<<(ostream& output, const some& param);
+	//friend istream& operator>>(istream& input, some& param);
+};
+
+istream& operator>>(istream& input, complex<double>& param) {
+	double arg;
+	cin >> arg;
+	param.real(arg);
+	cin >> arg;
+	param.imag(arg);
+	return input;
+}
+
+ostream& operator<<(ostream& output, const complex<double>& param) {
+	output << param.real() << " " << param.imag() << endl;
+	return output;
+}
+
+int main () {
+	complex<double> a;
+	cin >> a;
+	cout << a;
+	return 0;
+}
