@@ -7,6 +7,10 @@ abort; //<cstdlib>
 uncaught_exception; //<exception>
 raise; //<csignal>
 atexit;//<cstdlib>
+unexcepted;//<exception> when e.g. exception not listed in exception specification is thrown
+set_unexpected;
+
+unexcepted -> terminate -> abort
 
 when an exception is thrown, copy constructor is called,
 (even for a local static object)
@@ -34,5 +38,42 @@ catch(const void*)...
 another difference between passing a parameter and propagating an exception is that catch clauses
 are always tried in the order of appearance
 
+void somefunction () {
+  exception ex;
+  throw &ex; //what a bonehead... local object is destroyed
+}
 
+bad_alloc - operator new cannot satisfy memory request
+bad_cast - dynamic_cast to a reference fails
+bad_typeid - typeid applied to null reference
+bad_exception - unexpected exceptions
+
+when throw new exception, those who catch exception wont know whether they should 
+delete caught object or not, because they wont know whehter it was newed or 
+it is a reference to some static local or global object
+
+when an exception is caght by value, twice copy takes place,
+and slicing problem arises
+
+catch exceptions by reference ! (or if you do not modify them, by reference-to-const)
+
+void f() throw () {} - function states that it will not throw an exception
+
+class UnexpectedException{};
+void convertToUnexpected() {
+  throw UnexpectedException();
+}
+set_unexpected(convertToUnexpected);
+
+but if we do this:
+void convertToUnexpected() {
+  throw;
+}
+set_unexpected(convertToUnexpected);
+then we rethrowed exception will be replaced with standard bad_exception
+
+If a function with bad_exception listed in its dynamic-exception-specifier 
+throws an exception not listed in it and unexpected rethrows it 
+(or throws any other exception also not in the dynamic-exception-specifier), 
+a bad_exception is automatically thrown.
 
