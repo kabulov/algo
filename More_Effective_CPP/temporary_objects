@@ -1,0 +1,10 @@
+
+True temporary objects in C++ are invisible — they don’t appear in
+your source code. They arise whenever a non-heap object is created
+but not named. Such unnamed objects usually arise in one of two situations:
+when implicit type conversions are applied to make function
+calls succeed and when functions return objects. It’s important to understand
+how and why these temporary objects are created and destroyed,
+because the attendant costs of their construction and
+destruction can have a noticeable impact on the performance of your
+programs.
