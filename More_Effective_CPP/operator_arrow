@@ -8,6 +8,11 @@ about operator->
 (*it).second instead of the more conventional it->second.
 Why? The answer has to do with the conventions followed by the STL.
 In brief, the iterator it is an object, not a pointer, so there is no guarantee
-that “->” can be applied to it.† The STL does require that “.” and
+that “->” can be applied to it.(†) The STL does require that “.” and
 “*” be valid for iterators, however, so (*it).second, though syntactically
 clumsy, is guaranteed to work.)
+
+(†) In July 1995, the ISO/ANSI committee standardizing C++ added a requirement that
+most STL iterators support the “->” operator, so it->second should now work. Some
+STL implementations fail to satisfy this requirement, however, so (*it).second is
+still the more portable construct.
