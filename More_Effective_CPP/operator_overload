@@ -50,3 +50,13 @@ cannot overload
 1. all 4 casts
 2. new, delete, sizeof, typeid
 3. ., .*, ::, ?:
+
+Reasonable or not, there are rules to this C++ game, and one of them
+is that every overloaded operator must take at least one argument of a
+user-defined type. int isn’t a user-defined type, so we can’t overload
+an operator taking only arguments of that type. (If this rule didn’t exist,
+programmers would be able to change the meaning of predefined
+operations, and that would surely lead to chaos. For example, the attempted
+overloading of operator+ above would change the meaning of
+addition on ints. Is that really something we want people to be able to
+do?)
