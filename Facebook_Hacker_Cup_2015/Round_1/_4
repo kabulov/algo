@@ -1,0 +1,188 @@
+
+10 GB of stack..
+~ 3-4 mins of work
+
+#include <list>
+#include <deque>
+#include <queue>
+#include <cstdlib>
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <functional>
+#include <iomanip>
+#include <vector>
+#include <stack>
+#include <map>
+#include <set>
+#include <memory>
+#include <cmath>
+#include <string>
+#include <cctype>
+#include <iomanip>
+#include <sstream>
+#include <utility>
+#include <ctime>
+#include <bitset>
+#include <iterator>
+#include <numeric>
+#include <climits>
+
+using namespace std;
+
+#define FILE_READER freopen("input.txt", "r", stdin); freopen("output.txt", "w", stdout);
+#define FAST_READER ios::sync_with_stdio(false); cin.tie(NULL);
+
+const int maxn = 200 * 1000;
+
+int n;
+vector<vector<int> > g;
+
+void prn(long long ans, int test_case) {
+	printf("Case #%d: %I64d\n", test_case, ans);
+	//cout << "Case #" << test_case << ": " << ans << "\n";
+}
+
+#pragma comment(linker, "/STACK:10000000000") //5 GB = 5 * 10^9
+
+typedef pair<pair<int, int>, pair<long long, long long> > type; //<val,val>,<sum,sum>
+type leaf = make_pair(make_pair(1, 2), make_pair(1LL, 2LL));
+typedef pair<long long, int> set_type;
+set<set_type, std::greater<set_type> > st;
+
+void add(set_type param) {
+	st.insert(param);
+	while (st.size() > 2) {
+		st.erase(st.begin());
+	}
+}
+
+void work(long long sum, int len, vector<type>& a) { //a, st(set_type), n,  
+	set_type elem;
+	for (int i = 1; i <= 2; ++i) {
+		if (i < a[0].first.first) {
+			elem.second = i;
+			elem.first = elem.second + sum;
+			add(elem);
+		}
+		if (a[len - 1].first.first + i <= n) {
+			elem.second = a[len - 1].first.first + i;
+			elem.first = elem.second + sum;
+			add(elem);
+		}
+	}
+	for (int i = 1; i < len; ++i) {
+		for (int j = 1; j <= 2; ++j) {
+			if (a[i - 1].first.first + j < a[i].first.first) {
+				elem.second = a[i - 1].first.first + j;
+				elem.first = sum + elem.second;
+				add(elem);
+			}
+		}
+	}
+	for (int i = 0; i < len; ++i) {
+		if (i == 0 || (a[i].first.first != a[i - 1].first.first)) {
+			int number = a[i].first.first;
+			long long sum_plus = 0;
+			long long sum_minus = 0;
+			for (int j = i; j < len; ++j) {
+				if (a[j].first.first != number) break;
+				sum_minus += a[j].second.first;
+				sum_plus += a[j].second.second;
+			}
+			elem.second = number;
+			elem.first = sum - sum_minus + sum_plus + elem.second;
+			add(elem);
+		}
+	}
+}
+
+class cmp {
+public:
+	bool operator() (const type& a, const type& b) {
+		return a.first.first < b.first.first;
+	}
+};
+
+cmp compare;
+
+type offer(int len, vector<type>& a) {
+	if (len == 0) {
+		return leaf;
+	}
+	sort(a.begin(), a.begin() + len, compare); //crucial
+	long long sum = 0;
+	for (int i = 0; i < len; ++i) {
+		sum += a[i].second.first;
+	}
+	st.clear();
+	work(sum, len, a);
+	type ret;
+	set_type part = *st.begin();
+	ret.first.second = part.second;
+	ret.second.second = part.first;
+	st.erase(st.begin());
+	part = *st.begin();
+	ret.first.first = part.second;
+	ret.second.first = part.first;
+	if (ret.second.first == ret.second.second && ret.first.first > ret.first.second) {
+		swap(ret.first.first, ret.first.second);
+	}
+	return ret;
+}
+
+type dfs(int v, int p) {
+	int len = 0;
+	vector<type> a;
+	for (int i = 0, sz = g[v].size(); i < sz; ++i) {
+		int to = g[v][i];
+		if (to == p) continue;
+		type tmp = dfs(to, v);
+		a.push_back(tmp);
+	}
+	len = a.size();
+	return offer(len, a);
+}
+
+long long solve() {
+	if (n == 1) {
+		return 1LL;
+	}
+	type ans = dfs(0, -1);
+	return ans.second.first;
+}
+
+int main() {
+
+	FILE_READER
+	//FAST_READER
+
+	const int sentinel = 123;
+	g.resize(maxn + sentinel);
+
+	int t;
+	scanf("%d",&t);
+	
+	int p;
+	int test_case = 0;
+	long long ans;
+
+	while (t--> 0) {
+		scanf("%d",&n);
+		for (int i = 0; i < n; ++i) {
+			g[i].clear();
+		}
+		scanf("%d",&p);
+		for (int i = 1; i < n; ++i) {
+			scanf("%d", &p);
+			--p;
+			g[p].push_back(i);
+		}
+		ans = solve();
+		++test_case;
+		prn(ans, test_case);
+	}
+
+	return 0;
+}
+
