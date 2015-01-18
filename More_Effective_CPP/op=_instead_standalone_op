@@ -1,0 +1,21 @@
+
+class Rational {
+public:
+...
+Rational& operator+=(const Rational& rhs);
+Rational& operator-=(const Rational& rhs);
+};
+// operator+ implemented in terms of operator+=; see
+// Item 6 for an explanation of why the return value is
+// const and page 109 for a warning about implementation
+const Rational operator+(const Rational& lhs,
+const Rational& rhs)
+{
+return Rational(lhs) += rhs;
+}
+// operator- implemented in terms of operator -=
+const Rational operator-(const Rational& lhs,
+const Rational& rhs)
+{
+return Rational(lhs) -= rhs;
+}
