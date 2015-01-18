@@ -1,0 +1,21 @@
+
+your compilers are allowed to eliminate both the temporary inside operator*
+and the temporary returned by operator*. They can construct
+the object defined by the return expression inside the memory
+allotted for the object c. If your compilers do this, the total cost of temporary
+objects as a result of your calling operator* is zero: no temporaries
+are created. Instead, you pay for only one constructor call — the
+one to create c.
+
+“Yeah, yeah,” you mutter, “optimization, schmoptimization. Who cares
+what compilers can do? I want to know what they do do. Does any of
+this nonsense work with real compilers?” It does. This particular optimization
+— eliminating a local temporary by using a function’s return
+location (and possibly replacing that with an object at the function’s
+call site) — is both well-known and commonly implemented. It even
+has a name: the return value optimization. In fact, the existence of a
+name for this optimization may explain why it’s so widely available.
+Programmers looking for a C++ compiler can ask vendors whether the
+return value optimization is implemented. If one vendor says yes and
+another says “The what?,” the first vendor has a notable competitive
+advantage. Ah, capitalism. Sometimes you just gotta love it.
