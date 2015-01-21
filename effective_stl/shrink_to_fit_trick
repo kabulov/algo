@@ -4,3 +4,19 @@ vector<someclass>(v).swap(v);
 
 string s;
 string(s).swap(s);
+
+As an aside, 
+a variant of the swap trick can be used both to clear a container 
+and to reduce its capacity to the minimum your implementation offers. 
+You simply do the swap with a temporary vector or string that is default-constructed:
+
+vector<Contestant> v;
+string s;
+… // use v and s
+vector<Contestant>().swap(v); //clear v and minimize its capacity
+string().swap(s); // clear s and minimize its capacity
+
+One final observation about the swap trick, or, rather, about swap in general. 
+Swapping the contents of two containers also swaps their iterators, pointers, and references. 
+Iterators, pointers, and references that used to point to elements in one container 
+remain valid and point to the same elements — but in the other container— after the swap.
