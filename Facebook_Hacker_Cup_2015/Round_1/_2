@@ -39,7 +39,7 @@ const int maxn = (int)1e6;
 const int chset = 26;
 
 char s[maxn + sentinel];
-char v[maxn + sentinel][chset];
+char v[maxn + sentinel][chset]; // not char BUT int !! welcome !! it is the most stupid bug in the world !!
 int vsize;
 int amount;
 int slen;
