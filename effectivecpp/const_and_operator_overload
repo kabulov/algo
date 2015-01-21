@@ -1,0 +1,14 @@
+
+class some {
+public:
+  const char& operator[](size_t position) const {
+    //something
+  }
+  char& operator[](size_t position) {
+    return const_cast<char&>(
+      static_cast<const some&>(*this)[position] //calls const operator
+    );
+  }  
+private:
+  char* str;  
+};
