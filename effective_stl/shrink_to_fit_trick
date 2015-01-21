@@ -1,0 +1,6 @@
+
+vector<someclass> v;
+vector<someclass>(v).swap(v);
+
+string s;
+string(s).swap(s);
