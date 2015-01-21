@@ -1,0 +1,18 @@
+
+The elements in a vector are constrained by the C++ Standard to be stored in contiguous memory, 
+just like an array, so if we wish to pass v to a C API that looks something like this.
+
+void doSomething(const int* pInts, size_t numlnts);
+
+we can do it like this:
+
+doSomething(&v[0], v.size()); 
+
+Maybe. Probably. The only sticking point is if v is empty. 
+If it is, v.size() is zero, and &v[0] attempts to produce a pointer to something that does not exist. 
+Not good. Undefined results. A safer way to code the call is this:
+
+if (!v.empty()) {
+  doSomething(&v[0], v.size());
+}
+
