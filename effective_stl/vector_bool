@@ -1,0 +1,23 @@
+
+object becomes an STL container only if it fulfills all the container requirements 
+laid down in section 23.1 of the Standard for C++. 
+Among the requirements is that if c is a container of objects of type T 
+and c supports operator[], the following must compile:
+
+T *p = &c[0]; // initialize a T* with the address
+// of whatever operator[] returns
+
+In other words, if you use operator[] to get at one of the T objects in a Container<T>, 
+you can get a pointer to that object by taking its address. 
+(This assumes that T hasn't perversely overloaded operators.) 
+If vector<bool> is to be a container, then, this code must compile:
+
+vector<bool> v;
+bool *pb = &v[0]; // initialize a bool* with the address of
+// what vector<bool>::operator[] returns
+
+vector<bool> v;
+bool *pb = &v[0]; // error! the expression on tne right is
+// of type vector<bool>::reference*,
+// not bool*
+
