@@ -1,0 +1,5 @@
+
+!c.key_comp()(x, y) && !c.key_comp()(y, x)
+
+it's useful to bear in mind that just because x and y have equal values does not necessarily imply that 
+all of their data members have equal values
