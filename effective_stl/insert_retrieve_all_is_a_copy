@@ -4,3 +4,5 @@ the object you get is not the one that was in the container. Instead, when you a
 (via. e.g., insert or push_back, etc.), what goes into the container is a copy of the object you specify. 
 When you get an object from a container (via. e.g., front or back), what you set is a copy of what was contained. 
 Copy in, copy out. That's the STL way.
+
+avoid slicing problem when copying derived classes 
