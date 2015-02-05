@@ -1,0 +1,87 @@
+
+we are writing a game, and we have to calculate health values for game characters
+
+approaches : 
+
+1.
+simplest one, and the most obvious : virtual functions
+
+class GameCharacter {
+public:
+ GameCharacter() {}
+ virtual int health_func() const {}
+};
+
+2.
+template method pattern via the non-virtual interface idiom (NVI idiom)
+
+class GameCharacter {
+public:
+ int health() const {
+  //set up a context
+  int ret_val = health_virtual();
+  //clean up a context;
+  return ret_val;
+ }
+private:
+ virtual int health_virtual() const {
+  
+ }
+};
+
+notes:
+ health_virtal may be protected (public: NVI becomes broken)
+ we can redefine private virtual methods of a parent in children
+ 
+3.
+
+strategy pattern via function pointers
+
+notes:
+ we need either to break encapsulation of GameCharacter either use only public interface of GameCharacter
+
+class GameCharacter;
+
+int default_health_func(const GameCharacter& gc);
+
+class GameCharacter {
+public:
+ typedef int (*health_calc_func)(const GameCharacter&);
+ explicit GameCharacter(health_calc_func hcf = default_health_func):health_calc(hcf){}
+ int health() const {
+  return health_calc(*this);
+ }
+ void set_health(health_calc_func other) {
+  health_calc = other;
+ }
+private:
+ health_calc_func health_calc;
+};
+
+class OtherGameCharacter {
+public:
+ explicit OtherGameCharcter(health_calc_func hcf = default_health_calc):GameCharacter(hcf) {}
+};
+
+int first_health_func(const GameCharacter&);
+int second_health_func(const GameCharacter&);
+
+OtherGameCharacter ogc1(first_health_func);
+OtherGameCharacter ogc2(second_health_func);
+
+4.
+
+use std::function in <functional>
+
+just use typedef std::function<int(const GameCharacter&)> health_calc_func;
+
+then one may use
+
+struct health_calc {
+ int operator()(const GameCharacter&)const {}
+};
+
+5.
+
+classic strategy pattern
+
