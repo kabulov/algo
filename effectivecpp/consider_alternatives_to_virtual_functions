@@ -85,3 +85,22 @@ struct health_calc {
 
 classic strategy pattern
 
+class GameCharacter;
+
+class HealthCalc {
+public:
+ 
+ virtual int calc(const GameCharacter&) const {}
+};
+
+HealthCalc defaultHealthCalc;
+
+class GameCharacter {
+public:
+ explicit GameCharacter (HealthCalc* hc = &defaultHealthCalc):health_calc(hc) {}
+ int health() const {
+  return health_calc->calc(*this);
+ }
+private:
+ HealthCalc* health_calc;
+};
