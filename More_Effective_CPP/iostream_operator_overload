@@ -12,9 +12,9 @@ public:
 
 istream& operator>>(istream& input, complex<double>& param) {
 	double arg;
-	cin >> arg;
+	input >> arg;
 	param.real(arg);
-	cin >> arg;
+	input >> arg;
 	param.imag(arg);
 	return input;
 }
