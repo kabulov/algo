@@ -49,7 +49,7 @@ bad_typeid - typeid applied to null reference
 bad_exception - unexpected exceptions
 
 when throw new exception, those who catch exception wont know whether they should 
-delete caught object or not, because they wont know whehter it was newed or 
+delete caught object or not, because they wont know whether it was newed or 
 it is a reference to some static local or global object
 
 when an exception is caght by value, twice copy takes place,
