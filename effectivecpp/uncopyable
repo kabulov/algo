@@ -1,19 +1,5 @@
 
-if you want to prevent copying e.g. make copy constuctor and assignment operator invalid
 
-1. you can declare copy constructor and assignment operator private and not DEFINE them
- 
- class cls {
-  public:
-  //...
-  private:
-  cls(const cls&);
-  cls& operator=(const cls&);
- };
- 
- this way even friend or member functions cannot call them, but at link-time
- so if you want to make this happen at comple-time then next trick is useful
- 
 class uncopyable {
  protected:
   uncopyable(){}
@@ -25,10 +11,3 @@ class uncopyable {
 
 class someclass : private uncopyable {};
 
- so you just derive any class from uncopyable
- but it is important to derive 'private' because this is an implementation detail
- (is-a, has-a, is-implemented-in-terms-of-a)
- it is also important to make destructor not virtual to enable base class optimization
- but use of uncopyable may lead to multiple inheritance which turns off base class optimization
- one can also use boost version of the function described above. it is called 'noncopyable' there
- 
