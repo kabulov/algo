@@ -1,37 +1,4 @@
 
-True temporary objects in C++ are invisible — they don’t appear in
-your source code. They arise whenever a non-heap object is created
-but not named. Such unnamed objects usually arise in one of two situations:
-when implicit type conversions are applied to make function
-calls succeed and when functions return objects. It’s important to understand
-how and why these temporary objects are created and destroyed,
-because the attendant costs of their construction and
-destruction can have a noticeable impact on the performance of your
-programs.
-
-These conversions occur only when passing objects by value or when
-passing to a reference-to-const parameter. They do not occur when
-passing an object to a reference-to-non-const parameter. Consider
-this function:
 void uppercasify(string& str); // changes all chars in
-// str to upper case
-In the character-counting example, a char array could be successfully
-passed to countChar, but here, trying to call uppercasify with a
-char array fails:
-char subtleBookPlug[] = "Effective C++";
+char subtleBookPlug[] = "string some";
 uppercasify(subtleBookPlug); // error!
-No temporary is created to make the call succeed. Why not?
-Suppose a temporary were created. Then the temporary would be
-passed to uppercasify, which would modify the temporary so its
-characters were in upper case. But the actual argument to the function
-call — subtleBookPlug — would not be affected; only the temporary
-string object generated from subtleBookPlug would be
-changed. Surely this is not what the programmer intended. That programmer
-passed subtleBookPlug to uppercasify, and that programmer
-expected subtleBookPlug to be modified. Implicit type
-conversion for references-to-non-const objects, then, would allow
-temporary objects to be changed when programmers expected nontemporary
-objects to be modified. That’s why the language prohibits
-the generation of temporaries for non-const reference parameters.
-Reference-to-const parameters don’t suffer from this problem, because
-such parameters, by virtue of being const, can’t be changed.
