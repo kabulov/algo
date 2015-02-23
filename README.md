@@ -1,4 +1,2 @@
-algo
+projects, contests, cpp, java, etc
 ====
-
-algorithms and data structures
