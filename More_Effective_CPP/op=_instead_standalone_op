@@ -1,53 +1,15 @@
 
-class Rational {
+class Ratio {
 public:
 ...
-Rational& operator+=(const Rational& rhs);
-Rational& operator-=(const Rational& rhs);
+ Ratio& operator+=(const Ratio& param);
+ Ratio& operator-=(const Ratio& param);
 };
-// operator+ implemented in terms of operator+=; see
-// Item 6 for an explanation of why the return value is
-// const and page 109 for a warning about implementation
-const Rational operator+(const Rational& lhs,
-const Rational& rhs)
-{
-return Rational(lhs) += rhs;
+const Ratio operator+(const Ratio& lt, const Ratio& rt) {
+ return Ratio(lt) += rt;
 }
-// operator- implemented in terms of operator -=
-const Rational operator-(const Rational& lhs,
-const Rational& rhs)
-{
-return Rational(lhs) -= rhs;
+const Ratio operator-(const Ratio& lt, const Ratio& rt) {
+ return Ratio(lt) -= rt;
 }
 
 
-
-
-The final efficiency observation concerns implementing the standalone
-operators. Look again at the implementation for operator+:
-template<class T>
-const T operator+(const T& lhs, const T& rhs)
-{ return T(lhs) += rhs; }
-The expression T(lhs) is a call to T’s copy constructor. It creates a
-temporary object whose value is the same as that of lhs. This temporary
-is then used to invoke operator+= with rhs, and the result of
-that operation is returned from operator+.(†) This code seems unnecessarily
-cryptic. Wouldn’t it be better to write it like this?
-template<class T>
-const T operator+(const T& lhs, const T& rhs)
-{
-T result(lhs); // copy lhs into result
-return result += rhs; // add rhs to it and return
-}
-This template is almost equivalent to the one above, but there is a crucial
-difference. This second template contains a named object, result.
-The fact that this object is named means that the return value optimization
-(see Item 20) was, until relatively recently, unavailable for this
-implementation of operator+ (see the footnote on page 104). The first
-implementation has always been eligible for the return value optimization,
-so the odds may be better that the compilers you use will generate
-optimized code for it.
-
-(†) At least that’s what’s supposed to happen. Alas, some compilers treat T(lhs) as a cast
-to remove lhs’s constness, then add rhs to lhs and return a reference to the modified
-lhs! Test your compilers before relying on the behavior described above.
