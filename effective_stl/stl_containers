@@ -4,19 +4,12 @@ The standard STL sequence containers, vector, string, deque, and list.
 • The standard STL associative containers, set, multiset, map and multimap.
 
 • The nonstandard sequence containers slist and rope. slist is a singly linked list, 
-and rope is essentially a heavy-duty string. (A "rope" is a heavy-duty "string." Get it?) 
-You'll find a brief overview of these nonstandard (but commonly available) containers in Item 50.
+and rope is essentially a heavy-duty string. 
 
 • The nonstandard associative containers hash_set, hash_multiset, hash_map, and hash_multimap. 
-I examine these widely available hash-table-based variants on the standard associative containers in Item 25.
 
-• vector<char> as a replacement for string. Item 13 describes the conditions under which such a replacement might make sense. 
+• vector<char> as a replacement for string. 
 
-• vector as a replacement for the standard associative containers. As Item 23 makes clear, 
-there are times when vector can outperform the standard associative containers in both time and space.
+• vector as a replacement for the standard associative containers. 
 
 • Several standard non-STL containers, including arrays, bitset, valarray, stack, queue, and priority_queue. 
-Because these are non-STL containers. I have little to say about them in this book, 
-though Item 16 mentions a case where arrays are preferable to STL containers and Item 18 explains why 
-bitset may be better than vector<bool>. It's also worth bearing in mind that arrays can be used with STL algorithms, 
-because pointers can be used as array iterators.
