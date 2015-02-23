@@ -16,14 +16,6 @@ Rational oneHalf(1, 2);
 Rational result = oneHalf * 2; //fine : oneHalf.operator*(2);
 result = 2 * oneHalf; //error ! : 2.operator*(oneHalf);
 
-It turns out that parameters are eligible for type conversion only if they are listed in parameter list. 
-The implicit parameter corresponding to the object on which the memeber function is invoked - 
-  the one 'this' points to - is never eligible for implicit conversions.
-Thats why the first call compiles and  the second one does not. 
-The first case involves a parameter listed in the parameter list, but the second one doesnt.
-
-But we would still like to support mixed-mode arithmetic, however, and the way to do it is by now, perhaps, clear:
-make operator* a non-member function, thus allowing compilers to perform implicit type conversions on all arguments:
 
 class Rational {
 //...
@@ -38,8 +30,3 @@ Rational oneHalf(1,2);
 Rational result = onehalf * 2; //fine
 Rational result = 2 * oneHalf; //now fine too !
 
-But there is a nagging worry. Should operator* be made a friend of the Rational class ?
-In this case, the answer is no, because operator* can be implemented entirely in terms of Ratinals public interface.
-
-whenever you can avoid using friend functions, you should, 
-  because, much as in real life, friends are often more trouble than theyre worth.
