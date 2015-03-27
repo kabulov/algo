@@ -1,0 +1,18 @@
+
+lets shuffle an array:
+
+1.
+#include <algorithm> - random_shuffle
+
+2.
+#include <random> -> random_device
+#include <algorithm> -> shuffle
+random_device random_device;
+mt19937 generator(random_device());
+shuffle(v.begin(), v.end(), generator);
+
+3.
+#include <random>       // std::default_random_engine
+#include <chrono>       // std::chrono::system_clock
+unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+shuffle (foo.begin(), foo.end(), std::default_random_engine(seed));
