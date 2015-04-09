@@ -178,7 +178,7 @@ it = std::find(v.begin(),v.end(),123);
 #####
 #include <random> //std::default_random_engine, std::uniform_int_distribution
 
-std::default_random_engine engine;
+std::default_random_engine generator;
 std::uniform_int_distribution<int> distribution(1,100);
 int dice_once = distribution(generator);
 auto dice = std::bind(distribution, generator);
