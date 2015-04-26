@@ -1,1 +1,90 @@
 
+
+#include <thread>
+#include <vector>
+#include <iostream>
+#include <random>
+#include <algorithm>
+#include <chrono>
+
+using std::swap;
+using std::vector;
+using std::thread;
+using std::mt19937;
+using std::random_device;
+using std::uniform_int_distribution;
+using std::cin;
+using std::cout;
+using std::endl;
+
+vector<int> v;
+vector<int> s;
+int threshold;
+
+void msort(int left, int right) {
+	if (left + 1 >= right) return;
+	int mt = (left + right) / 2;
+	bool flag = false;
+	thread t;
+	if (mt - left > threshold) {
+		flag = true;
+		t = thread(msort, left, mt);
+	} else {
+		msort(left, mt);
+	}	
+	msort(mt, right);
+	if (flag) {
+		t.join();
+	}
+	for (int i = left; i < mt; ++i) {
+		s[i] = v[i];
+	}
+	int k = left;
+	int i = left;
+	int j = mt;
+	while (i < mt || j < right) {
+		if (i == mt) {
+			v[k++] = v[j++];
+		} else
+		if (j == right) {
+			v[k++] = s[i++];
+		} else {
+			if (s[i] < v[j]) {
+				v[k++] = s[i++];
+			} else {
+				v[k++] = v[j++];
+			}
+		}
+	}
+}
+
+int main () {
+
+	int size;
+	cin >> size;
+	int thread_amount;
+	cin >> thread_amount;
+	threshold = size / thread_amount;
+
+	random_device rd;
+	mt19937 gen(rd());
+	v.resize(size);
+	for (int i = 1; i < size; ++i) {
+		int j = uniform_int_distribution<int>(0, i)(gen);
+		v[i] = i;
+		swap(v[j], v[i]);
+	}
+	s.resize(size);
+	auto start = std::chrono::high_resolution_clock::now();
+	thread(msort, 0, size).join();
+	auto stop = std::chrono::high_resolution_clock::now();
+	cout << std::chrono::duration<double>(stop - start).count() << endl;
+	for (int i = 1; i < size; ++i) {
+		if (v[i - 1] > v[i]) {
+			cout << "bad" << "\n";
+			return 0;
+		}
+	}
+	cout << "good" << "\n";
+	return 0;
+}
