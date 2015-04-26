@@ -1,0 +1,122 @@
+
+
+#pragma warning(disable:4996)
+
+#include <thread>
+#include <iostream>
+#include <random>
+#include <algorithm>
+#include <chrono>
+#include <iomanip>
+#include <atomic>
+#include <mutex>
+
+using std::random_device;
+using std::mt19937;
+using std::vector;
+using std::mutex;
+using std::atomic;
+using std::thread;
+using std::uniform_int_distribution;
+using std::cin;
+using std::cout;
+using std::endl;
+using std::fixed;
+using std::setprecision;
+
+random_device seed_;
+mt19937 generator;
+vector<int> v;
+int size;
+
+void generator_init() {
+	generator.seed(seed_());
+}
+
+mutex mut;
+int random(int left, int right) {//inclusive
+	mut.lock();
+	return uniform_int_distribution<int>(left, right)(generator);
+	mut.unlock();
+}
+
+void shuffle() {
+	for (int i = 1; i < size; ++i) {
+		int j = uniform_int_distribution<int>(0, i)(generator);  //fisher-yates
+		int t = v[i];
+		v[i] = v[j];
+		v[j] = t;
+	}
+}
+
+int thread_amount;
+int threshold; //threshold >= size_of_input / thread_amount + 1
+
+void qsort_multithreaded(int left, int right) {
+	if (left >= right) return;
+	int i = left;
+	int j = right;
+	int mid = v[left + random(0, right - left)];	//some threads fall here if left > right
+	while (i <= j) {
+		while (v[i] < mid) ++i;
+		while (mid < v[j]) --j;
+		if (i <= j) {
+			int t = v[i];
+			v[i] = v[j];
+			v[j] = t;
+			++i;
+			--j;
+		}
+	}
+	atomic<bool> flag(false);
+	thread left_half;
+	if (left < j) {
+		if (j - left + 1 > threshold) {
+			flag = true; // !!atomic
+			left_half = thread(qsort_multithreaded, left, j);
+		} else {
+			qsort_multithreaded(left, j);
+		}
+	}
+	if (i < right) {
+		qsort_multithreaded(i, right);
+	}
+	if (flag) {
+		left_half.join();
+	}
+}
+
+void init_permutation() {
+	v.resize(size);
+	for (int i = 0; i < size; ++i) {
+		v[i] = i;
+	}
+}
+
+void prn() {
+	for (int i = 0; i < size; ++i) {
+		if (v[i] != i) {
+			cout << "bad" << endl;
+			return;
+		}
+	}
+	cout << "good" << endl;
+}
+
+int main () {
+
+	cin >> size;
+	cin >> thread_amount;
+	threshold = size / thread_amount + 1;
+	generator_init();
+	init_permutation();
+	shuffle();
+	typedef std::chrono::high_resolution_clock myclock;
+	myclock::time_point start = myclock::now();
+	qsort_multithreaded(0, size - 1);
+	myclock::time_point stop = myclock::now();
+	auto duration = std::chrono::duration<double>(stop - start).count();
+	cout << setprecision(10) << fixed << duration << endl;
+	prn();
+	return 0;
+}
